@@ -2,6 +2,7 @@ const { body } = require('express-validator')
 
 const offreValidator = [
   body('title')
+    .optional()
     .trim()
     .notEmpty().withMessage('Le titre de l\'offre est requis.')
     .isLength({ min: 5 }).withMessage('Le titre doit contenir au moins 5 caractères.')

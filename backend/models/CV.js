@@ -5,30 +5,24 @@ const CVSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true        // un seul CV par utilisateur
+    unique: true
   },
-  dateOfBirth: Date,
-  mobile:  String,
-  phone:   String,
-  fax:     String,
+  dateOfBirth:   Date,
+  mobile:        String,
+  phone:         String,
+  fax:           String,
   civilStatus: {
-    type: Number        // 0=célibataire, 1=marié, 2=divorcé...
+    type: Number   // 0=célibataire, 1=marié, 2=divorcé, 3=veuf
   },
   driverLicense: {
     type: Boolean,
     default: false
   },
-  skills: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Skill'        // relation vers le modèle Skill
-  }],
-  areaOfExpertise: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'AreaOfExpertise'
-  }],
-  preferredPositions: [String],   // liste de postes souhaités
-  birthProvinceId:   Number,
-  addressProvinceId: Number,
+  skills:             [String],   // ← texte libre
+  areaOfExpertise:    [String],   // ← texte libre
+  preferredPositions: [String],
+  birthProvinceId:    Number,
+  addressProvinceId:  Number,
   status: {
     type: Number,
     default: 1
