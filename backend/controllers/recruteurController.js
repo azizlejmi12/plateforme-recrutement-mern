@@ -8,6 +8,7 @@ const Invitation      = require('../models/InvitationToApply')
 const CV              = require('../models/CV')
 const { sendInvitationEmail } = require('../config/email')
 
+
 // =============================================
 // PROFIL — GET
 // =============================================
@@ -531,8 +532,67 @@ const addNoteEntretien = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message })
   }
 }
+// =============================================
+// DASHBOARD STATS
+// =============================================
+const getDashboardStats = async (req, res) => {
+  try {
+    // Récupérer toutes les offres du recruteur
+    const offres = await Job.find({ manager: req.user.id })
+    const offreIds = offres.map(o => o._id)
+
+    // Calculer toutes les stats en parallèle
+    const [
+      totalCandidatures,
+      candidaturesEnAttente,
+      candidaturesShortlisted,
+      totalEntretiens,
+      entretiensAVenir,
+      entretiensEffectues,
+      totalInvitations
+    ] = await Promise.all([
+      Candidacy.countDocuments({ job: { $in: offreIds } }),
+      Candidacy.countDocuments({ job: { $in: offreIds }, status: 0 }),
+      Candidacy.countDocuments({ job: { $in: offreIds }, shortlisted: true }),
+      Interview.countDocuments({ createdBy: req.user.id }),
+      Interview.countDocuments({ createdBy: req.user.id, date: { $gt: new Date() }, status: 0 }),
+      Interview.countDocuments({ createdBy: req.user.id, status: 1 }),
+      Invitation.countDocuments({ job: { $in: offreIds } })
+    ])
+
+    res.status(200).json({
+      offres: {
+        total:      offres.length,
+        publiees:   offres.filter(o => o.status === 1).length,
+        brouillons: offres.filter(o => o.status === 0).length,
+        cloturees:  offres.filter(o => o.status === 2).length,
+      },
+      candidatures: {
+        total:        totalCandidatures,
+        enAttente:    candidaturesEnAttente,
+        shortlisted:  candidaturesShortlisted,
+      },
+      entretiens: {
+        total:     totalEntretiens,
+        aVenir:    entretiensAVenir,
+        effectues: entretiensEffectues,
+      },
+      invitations: {
+        total: totalInvitations
+      },
+      // Dernières offres pour l'aperçu
+      dernieresOffres: offres
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, 5)
+    })
+
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message })
+  }
+}
 
 module.exports = {
+  getDashboardStats,
   getProfil,
   updateProfil,
   createOffre,

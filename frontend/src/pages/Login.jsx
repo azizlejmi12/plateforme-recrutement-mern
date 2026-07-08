@@ -56,7 +56,7 @@ function Login() {
 
       // Redirige vers le bon espace selon le rôle
       if (user.role === 'CANDIDAT')  navigate('/candidat/offres')
-      if (user.role === 'RECRUTEUR') navigate('/recruteur/offres')
+      if (user.role === 'RECRUTEUR') navigate('/recruteur/dashboard')
       if (user.role === 'ADMIN')     navigate('/admin/dashboard')
 
     } catch (err) {

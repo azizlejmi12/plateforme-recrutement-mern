@@ -31,7 +31,7 @@ const sendRefreshTokenCookie = (res, refreshToken) => {
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,     // inaccessible au JavaScript du navigateur
     secure:   false,    // true en production (HTTPS)
-    sameSite: 'strict', // protection CSRF
+    sameSite: 'lax', // protection CSRF
     maxAge:   7 * 24 * 60 * 60 * 1000  // 7 jours en millisecondes
   })
 }

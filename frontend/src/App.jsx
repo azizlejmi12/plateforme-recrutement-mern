@@ -12,6 +12,10 @@ import Offres          from './pages/candidat/Offres'
 import OffreDetail     from './pages/candidat/OffreDetail'
 import MesCandidatures from './pages/candidat/MesCandidatures'
 import MonCV           from './pages/candidat/MonCV'
+import MesInvitations  from './pages/candidat/MesInvitations'
+
+// Pages recruteur
+import Dashboard from './pages/recruteur/Dashboard'
 
 function App() {
   return (
@@ -30,26 +34,34 @@ function App() {
               <Offres />
             </ProtectedRoute>
           } />
-
           <Route path="/candidat/offres/:id" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <OffreDetail />
             </ProtectedRoute>
           } />
-
           <Route path="/candidat/candidatures" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <MesCandidatures />
             </ProtectedRoute>
           } />
-
           <Route path="/candidat/cv" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <MonCV />
             </ProtectedRoute>
           } />
+          <Route path="/candidat/invitations" element={
+            <ProtectedRoute roles={['CANDIDAT']}>
+              <MesInvitations />
+            </ProtectedRoute>
+          } />
 
           {/* ── Routes recruteur ── */}
+          {/* ⚠️ Les routes spécifiques AVANT le wildcard */}
+          <Route path="/recruteur/dashboard" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/recruteur/*" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <div>Pages recruteur — à venir</div>

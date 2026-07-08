@@ -1,7 +1,7 @@
 const express = require('express')
 const router  = express.Router()
 const {
-  getProfil, updateProfil, createOffre, getMesOffres, getOffre,
+  getDashboardStats,getProfil, updateProfil, createOffre, getMesOffres, getOffre,
   updateOffre, deleteOffre, getCandidatures, shortlistCandidat,
   inviterCandidat, planifierEntretien, getMesEntretiens,
   updateEntretien, addNoteCandidature, addNoteEntretien
@@ -29,5 +29,7 @@ router.get('/entretiens',                    getMesEntretiens)
 router.put('/entretiens/:id',                updateEntretien)
 router.post('/notes/candidature',            noteValidator,                validate, addNoteCandidature)
 router.post('/notes/entretien',              noteValidator,                validate, addNoteEntretien)
+router.get('/dashboard', getDashboardStats)
+
 
 module.exports = router

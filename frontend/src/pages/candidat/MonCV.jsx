@@ -3,6 +3,21 @@ import api from '../../services/api'
 import Layout from '../../components/Layout'
 import { Save, Plus, X } from 'lucide-react'
 
+// ─────────────────────────────────────────────
+// DONNÉES — Gouvernorats tunisiens
+// ─────────────────────────────────────────────
+const gouvernorats = {
+  1: 'Ariana', 2: 'Béja', 3: 'Ben Arous', 4: 'Bizerte',
+  5: 'Gabès', 6: 'Gafsa', 7: 'Jendouba', 8: 'Kairouan',
+  9: 'Kasserine', 10: 'Kébili', 11: 'Le Kef', 12: 'Mahdia',
+  13: 'Manouba', 14: 'Médenine', 15: 'Monastir', 16: 'Nabeul',
+  17: 'Sfax', 18: 'Sidi Bouzid', 19: 'Siliana', 20: 'Sousse',
+  21: 'Tataouine', 22: 'Tozeur', 23: 'Tunis', 24: 'Zaghouan'
+}
+
+// ─────────────────────────────────────────────
+// NAVIGATION SIDEBAR
+// ─────────────────────────────────────────────
 const navItems = [
   { path: '/candidat/offres',         label: '🔍 Offres d\'emploi' },
   { path: '/candidat/candidatures',   label: '📋 Mes candidatures' },
@@ -25,8 +40,8 @@ function MonCV() {
   const [formData, setFormData] = useState({
     dateOfBirth:        '',
     mobile:             '',
-    phone:              '',
-    fax:                '',
+    github:             '',    // ← remplace phone
+    linkedin:           '', 
     civilStatus:        0,
     driverLicense:      false,
     skills:             [],
@@ -36,14 +51,14 @@ function MonCV() {
     addressProvinceId:  '',
   })
 
-  // States pour les inputs d'ajout
+  // States pour les inputs d'ajout de tags
   const [newSkill, setNewSkill]       = useState('')
   const [newArea, setNewArea]         = useState('')
   const [newPosition, setNewPosition] = useState('')
 
 
   // ─────────────────────────────────────────────
-  // CHARGEMENT
+  // CHARGEMENT DU CV
   // ─────────────────────────────────────────────
   useEffect(() => {
     fetchCV()
@@ -59,8 +74,8 @@ function MonCV() {
                               ? new Date(res.data.dateOfBirth).toISOString().split('T')[0]
                               : '',
         mobile:             res.data.mobile             || '',
-        phone:              res.data.phone              || '',
-        fax:                res.data.fax                || '',
+        github:             res.data.github             || '',
+        linkedin:           res.data.linkedin           || '',
         civilStatus:        res.data.civilStatus        || 0,
         driverLicense:      res.data.driverLicense      || false,
         skills:             res.data.skills             || [],
@@ -103,7 +118,7 @@ function MonCV() {
     setFormData({ ...formData, skills: formData.skills.filter((_, i) => i !== index) })
   }
 
-  // Domaines
+  // Domaines d'expertise
   const addArea = () => {
     if (!newArea.trim()) return
     setFormData({ ...formData, areaOfExpertise: [...formData.areaOfExpertise, newArea.trim()] })
@@ -140,9 +155,29 @@ function MonCV() {
       } else {
         res = await api.post('/candidat/cv', formData)
       }
-      setCV(res.data)
+
+      // Recharger le CV frais depuis le backend
+      const freshCV = await api.get('/candidat/cv')
+      setCV(freshCV.data)
+      setFormData({
+        dateOfBirth:        freshCV.data.dateOfBirth
+                              ? new Date(freshCV.data.dateOfBirth).toISOString().split('T')[0]
+                              : '',
+        mobile:             freshCV.data.mobile             || '',
+        github:             freshCV.data.github             || '',
+        linkedin:           freshCV.data.linkedin           || '',
+        civilStatus:        freshCV.data.civilStatus        || 0,
+        driverLicense:      freshCV.data.driverLicense      || false,
+        skills:             freshCV.data.skills             || [],
+        areaOfExpertise:    freshCV.data.areaOfExpertise    || [],
+        preferredPositions: freshCV.data.preferredPositions || [],
+        birthProvinceId:    freshCV.data.birthProvinceId    || '',
+        addressProvinceId:  freshCV.data.addressProvinceId  || '',
+      })
+
       setSuccess('CV sauvegardé avec succès !')
       setIsEditing(false)
+
     } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors de la sauvegarde.')
     } finally {
@@ -200,6 +235,7 @@ function MonCV() {
 
       {!loading && (
         <>
+          {/* Messages */}
           {success && (
             <div className="mb-6 px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm">
               {success}
@@ -211,7 +247,9 @@ function MonCV() {
             </div>
           )}
 
-          {/* ══ MODE APERÇU ══ */}
+          {/* ══════════════════════════════════════
+              MODE APERÇU
+          ══════════════════════════════════════ */}
           {cv && !isEditing && (
             <div className="bg-white border border-border rounded-xl divide-y divide-border">
 
@@ -219,14 +257,20 @@ function MonCV() {
               <div className="px-6 py-5">
                 <h2 className="font-semibold text-gray-900 mb-4">Informations personnelles</h2>
                 <div className="grid grid-cols-2 gap-4">
-                  <InfoItem label="Date de naissance"    value={formatDate(cv.dateOfBirth)} />
-                  <InfoItem label="Mobile"               value={cv.mobile} />
-                  <InfoItem label="Téléphone fixe"       value={cv.phone} />
-                  <InfoItem label="Fax"                  value={cv.fax} />
-                  <InfoItem label="Situation familiale"  value={civilStatusLabels[cv.civilStatus]} />
-                  <InfoItem label="Permis de conduire"   value={cv.driverLicense ? '✓ Oui' : '✗ Non'} />
-                  <InfoItem label="Province de naissance"  value={cv.birthProvinceId} />
-                  <InfoItem label="Province de résidence"  value={cv.addressProvinceId} />
+                  <InfoItem label="Date de naissance"       value={formatDate(cv.dateOfBirth)} />
+                  <InfoItem label="Mobile"                  value={cv.mobile} />
+                  <InfoItem label="GitHub"   value={cv.github} />
+                  <InfoItem label="LinkedIn" value={cv.linkedin} />
+                  <InfoItem label="Situation familiale"     value={civilStatusLabels[cv.civilStatus]} />
+                  <InfoItem label="Permis de conduire"      value={cv.driverLicense ? '✓ Oui' : '✗ Non'} />
+                  <InfoItem
+                    label="Gouvernorat de naissance"
+                    value={cv.birthProvinceId ? gouvernorats[cv.birthProvinceId] : null}
+                  />
+                  <InfoItem
+                    label="Gouvernorat de résidence"
+                    value={cv.addressProvinceId ? gouvernorats[cv.addressProvinceId] : null}
+                  />
                 </div>
               </div>
 
@@ -282,7 +326,9 @@ function MonCV() {
           )}
 
 
-          {/* ══ MODE ÉDITION ══ */}
+          {/* ══════════════════════════════════════
+              MODE ÉDITION
+          ══════════════════════════════════════ */}
           {isEditing && (
             <form onSubmit={handleSubmit} className="space-y-6">
 
@@ -308,19 +354,27 @@ function MonCV() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Téléphone fixe</label>
-                    <input type="tel" name="phone" value={formData.phone}
-                           onChange={handleChange} placeholder="71 234 567"
-                           className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
-                                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      GitHub
+                    </label>
+                    <input type="url" name="github" value={formData.github}
+                          onChange={handleChange}
+                          placeholder="https://github.com/username"
+                          className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
+                                      focus:outline-none focus:ring-2 focus:ring-primary/30
+                                      focus:border-primary transition" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Fax</label>
-                    <input type="tel" name="fax" value={formData.fax}
-                           onChange={handleChange} placeholder="71 234 567"
-                           className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
-                                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    LinkedIn
+                      </label>
+                      <input type="url" name="linkedin" value={formData.linkedin}
+                            onChange={handleChange}
+                            placeholder="https://linkedin.com/in/username"
+                            className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
+                                        focus:outline-none focus:ring-2 focus:ring-primary/30
+                                        focus:border-primary transition" />
                   </div>
 
                   <div>
@@ -336,23 +390,38 @@ function MonCV() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Province de naissance</label>
-                    <input type="number" name="birthProvinceId" value={formData.birthProvinceId}
-                           onChange={handleChange} placeholder="Ex: 11"
-                           className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
-                                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Gouvernorat de naissance
+                    </label>
+                    <select name="birthProvinceId" value={formData.birthProvinceId}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
+                                       focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition">
+                      <option value="">Sélectionner...</option>
+                      {Object.entries(gouvernorats).map(([id, nom]) => (
+                        <option key={id} value={id}>{nom}</option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Province de résidence</label>
-                    <input type="number" name="addressProvinceId" value={formData.addressProvinceId}
-                           onChange={handleChange} placeholder="Ex: 11"
-                           className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
-                                      focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      Gouvernorat de résidence
+                    </label>
+                    <select name="addressProvinceId" value={formData.addressProvinceId}
+                            onChange={handleChange}
+                            className="w-full px-4 py-2.5 rounded-lg border border-border bg-white
+                                       focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition">
+                      <option value="">Sélectionner...</option>
+                      {Object.entries(gouvernorats).map(([id, nom]) => (
+                        <option key={id} value={id}>{nom}</option>
+                      ))}
+                    </select>
                   </div>
 
                 </div>
 
+                {/* Permis de conduire */}
                 <div className="mt-4">
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input type="checkbox" name="driverLicense" checked={formData.driverLicense}

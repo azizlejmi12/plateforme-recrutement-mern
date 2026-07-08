@@ -9,8 +9,8 @@ const CVSchema = new mongoose.Schema({
   },
   dateOfBirth:   Date,
   mobile:        String,
-  phone:         String,
-  fax:           String,
+  github:   String,
+  linkedin: String,
   civilStatus: {
     type: Number   // 0=célibataire, 1=marié, 2=divorcé, 3=veuf
   },
