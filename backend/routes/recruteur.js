@@ -13,7 +13,7 @@ const { offreValidator, planifierEntretienValidator, noteValidator } = require('
 
 router.use(authMiddleware)
 router.use(roleMiddleware('RECRUTEUR'))
-
+router.get('/dashboard', getDashboardStats)
 router.get('/profil',                        getProfil)
 router.put('/profil',                        updateProfil)
 router.post('/',                             offreValidator,               validate, createOffre)
@@ -29,7 +29,6 @@ router.get('/entretiens',                    getMesEntretiens)
 router.put('/entretiens/:id',                updateEntretien)
 router.post('/notes/candidature',            noteValidator,                validate, addNoteCandidature)
 router.post('/notes/entretien',              noteValidator,                validate, addNoteEntretien)
-router.get('/dashboard', getDashboardStats)
 
 
 module.exports = router

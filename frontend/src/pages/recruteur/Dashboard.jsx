@@ -2,13 +2,18 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import Layout from '../../components/Layout'
-import { Briefcase, Users, Calendar, ChevronRight } from 'lucide-react'
+import {
+  Briefcase, Users, Calendar,
+  ChevronRight, CheckCircle, XCircle, Clock
+} from 'lucide-react'
 
-// Navigation sidebar recruteur
+// ─────────────────────────────────────────────
+// NAVIGATION SIDEBAR RECRUTEUR
+// ─────────────────────────────────────────────
 export const navItems = [
-  { path: '/recruteur/dashboard',    label: '📊 Dashboard'        },
-  { path: '/recruteur/offres',       label: '💼 Mes offres'       },
-  { path: '/recruteur/entretiens',   label: '📅 Mes entretiens'   },
+  { path: '/recruteur/dashboard',  label: '📊 Dashboard'      },
+  { path: '/recruteur/offres',     label: '💼 Mes offres'     },
+  { path: '/recruteur/entretiens', label: '📅 Mes entretiens' },
 ]
 
 function Dashboard() {
@@ -17,7 +22,6 @@ function Dashboard() {
   // STATES
   // ─────────────────────────────────────────────
   const [stats, setStats]     = useState(null)
-  const [offres, setOffres]   = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
 
@@ -32,17 +36,8 @@ function Dashboard() {
   const fetchDashboard = async () => {
     setLoading(true)
     try {
-      // Charger les offres du recruteur
-      const offresRes = await api.get('/recruteur')
-      setOffres(offresRes.data.offres || [])
-
-      // Calculer les stats localement
-      setStats({
-        totalOffres:      offresRes.data.pagination?.total || 0,
-        offresPubliees:   offresRes.data.offres?.filter(o => o.status === 1).length || 0,
-        offresBrouillon:  offresRes.data.offres?.filter(o => o.status === 0).length || 0,
-      })
-
+      const res = await api.get('/recruteur/dashboard')
+      setStats(res.data)
     } catch (err) {
       setError('Impossible de charger le dashboard.')
     } finally {
@@ -74,41 +69,99 @@ function Dashboard() {
         </div>
       )}
 
+      {/* ── Erreur ── */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6">
           {error}
         </div>
       )}
 
+      {/* ── Contenu ── */}
       {!loading && !error && stats && (
         <>
-          {/* ── Cartes de statistiques ── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 
+          {/* ══ SECTION OFFRES ══ */}
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+            Offres
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <StatCard
-              icon={<Briefcase size={20} />}
-              label="Total offres"
-              value={stats.totalOffres}
+              icon={<Briefcase size={18} />}
+              label="Total"
+              value={stats.offres.total}
               color="bg-primary/10 text-primary"
             />
-
             <StatCard
-              icon={<Users size={20} />}
-              label="Offres publiées"
-              value={stats.offresPubliees}
+              icon={<CheckCircle size={18} />}
+              label="Publiées"
+              value={stats.offres.publiees}
               color="bg-success/10 text-success"
             />
-
             <StatCard
-              icon={<Calendar size={20} />}
+              icon={<Clock size={18} />}
               label="Brouillons"
-              value={stats.offresBrouillon}
+              value={stats.offres.brouillons}
               color="bg-accent/10 text-accent"
             />
-
+            <StatCard
+              icon={<XCircle size={18} />}
+              label="Clôturées"
+              value={stats.offres.cloturees}
+              color="bg-red-50 text-red-500"
+            />
           </div>
 
-          {/* ── Dernières offres ── */}
+          {/* ══ SECTION CANDIDATURES ══ */}
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+            Candidatures
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <StatCard
+              icon={<Users size={18} />}
+              label="Total reçues"
+              value={stats.candidatures.total}
+              color="bg-primary/10 text-primary"
+            />
+            <StatCard
+              icon={<Clock size={18} />}
+              label="En attente"
+              value={stats.candidatures.enAttente}
+              color="bg-accent/10 text-accent"
+            />
+            <StatCard
+              icon={<CheckCircle size={18} />}
+              label="Présélectionnés"
+              value={stats.candidatures.shortlisted}
+              color="bg-success/10 text-success"
+            />
+          </div>
+
+          {/* ══ SECTION ENTRETIENS ══ */}
+          <h2 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">
+            Entretiens
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <StatCard
+              icon={<Calendar size={18} />}
+              label="Total"
+              value={stats.entretiens.total}
+              color="bg-primary/10 text-primary"
+            />
+            <StatCard
+              icon={<Clock size={18} />}
+              label="À venir"
+              value={stats.entretiens.aVenir}
+              color="bg-accent/10 text-accent"
+            />
+            <StatCard
+              icon={<CheckCircle size={18} />}
+              label="Effectués"
+              value={stats.entretiens.effectues}
+              color="bg-success/10 text-success"
+            />
+          </div>
+
+          {/* ══ DERNIÈRES OFFRES ══ */}
           <div className="bg-white border border-border rounded-xl overflow-hidden">
 
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -121,7 +174,7 @@ function Dashboard() {
               </Link>
             </div>
 
-            {offres.length === 0 ? (
+            {stats.dernieresOffres.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-sm">Aucune offre créée.</p>
                 <Link
@@ -133,7 +186,7 @@ function Dashboard() {
               </div>
             ) : (
               <div>
-                {offres.slice(0, 5).map((offre) => (
+                {stats.dernieresOffres.map((offre) => (
                   <Link
                     key={offre._id}
                     to={`/recruteur/offres/${offre._id}`}
@@ -142,7 +195,8 @@ function Dashboard() {
                                hover:bg-gray-50 transition group"
                   >
                     <div>
-                      <p className="font-medium text-gray-900 text-sm group-hover:text-primary transition">
+                      <p className="font-medium text-gray-900 text-sm
+                                    group-hover:text-primary transition">
                         {offre.title}
                       </p>
                       <p className="text-xs text-gray-400 font-mono mt-0.5">
@@ -151,13 +205,17 @@ function Dashboard() {
                                               '🔴 Clôturée'}
                       </p>
                     </div>
-                    <ChevronRight size={16} className="text-gray-300 group-hover:text-gray-500 transition" />
+                    <ChevronRight
+                      size={16}
+                      className="text-gray-300 group-hover:text-gray-500 transition"
+                    />
                   </Link>
                 ))}
               </div>
             )}
 
           </div>
+
         </>
       )}
 
