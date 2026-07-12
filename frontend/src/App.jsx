@@ -16,6 +16,10 @@ import MesInvitations  from './pages/candidat/MesInvitations'
 
 // Pages recruteur
 import Dashboard from './pages/recruteur/Dashboard'
+import MesOffres from './pages/recruteur/MesOffres'
+import CreateOffre from './pages/recruteur/CreateOffre'
+
+
 
 function App() {
   return (
@@ -32,6 +36,12 @@ function App() {
           <Route path="/candidat/offres" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <Offres />
+            </ProtectedRoute>
+          } />
+          {/* Ajouter AVANT /recruteur/offres/:id */}
+          <Route path="/recruteur/offres/creer" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <CreateOffre />
             </ProtectedRoute>
           } />
           <Route path="/candidat/offres/:id" element={
@@ -62,6 +72,12 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           } />
+          {/* Ajouter avant /recruteur/* */}
+            <Route path="/recruteur/offres" element={
+              <ProtectedRoute roles={['RECRUTEUR']}>
+                <MesOffres />
+              </ProtectedRoute>
+            } />
           <Route path="/recruteur/*" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <div>Pages recruteur — à venir</div>
