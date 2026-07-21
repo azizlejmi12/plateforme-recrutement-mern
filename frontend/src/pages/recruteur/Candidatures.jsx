@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 
 // ─────────────────────────────────────────────
-// DONNÉES — Gouvernorats tunisiens
+// DONNÉES
 // ─────────────────────────────────────────────
 const gouvernorats = {
   1: 'Ariana', 2: 'Béja', 3: 'Ben Arous', 4: 'Bizerte',
@@ -34,9 +34,6 @@ function Candidatures() {
   const [error, setError]               = useState('')
   const [expandedId, setExpandedId]     = useState(null)
   const [shortlisting, setShortlisting] = useState(null)
-  const [noteData, setNoteData]         = useState({})
-  const [savingNote, setSavingNote]     = useState(null)
-  const [notes, setNotes]               = useState({})
 
   const { id } = useParams()
   const navigate = useNavigate()
@@ -67,25 +64,10 @@ function Candidatures() {
 
 
   // ─────────────────────────────────────────────
-  // TOGGLE EXPAND + CHARGEMENT NOTES
+  // TOGGLE EXPAND
   // ─────────────────────────────────────────────
-  const toggleExpand = async (candidatureId, userId) => {
-    if (expandedId === candidatureId) {
-      setExpandedId(null)
-      return
-    }
-
-    setExpandedId(candidatureId)
-
-    // Charger les notes si pas encore chargées
-    if (!notes[candidatureId]) {
-      try {
-        const res = await api.get(`/recruteur/notes/candidature/${userId}/${id}`)
-        setNotes(prev => ({ ...prev, [candidatureId]: res.data }))
-      } catch (err) {
-        console.error('Erreur chargement notes')
-      }
-    }
+  const toggleExpand = (candidatureId) => {
+    setExpandedId(prev => prev === candidatureId ? null : candidatureId)
   }
 
 
@@ -110,39 +92,6 @@ function Candidatures() {
       setError('Erreur lors de la présélection.')
     } finally {
       setShortlisting(null)
-    }
-  }
-
-
-  // ─────────────────────────────────────────────
-  // AJOUTER UNE NOTE
-  // ─────────────────────────────────────────────
-  const handleAddNote = async (candidature) => {
-    const description = noteData[candidature._id]
-    if (!description?.trim()) return
-
-    setSavingNote(candidature._id)
-    try {
-      await api.post('/recruteur/notes/candidature', {
-        userId:      candidature.user._id,
-        jobId:       id,
-        description,
-        type:        0
-      })
-
-      // Recharger les notes après ajout
-      const res = await api.get(
-        `/recruteur/notes/candidature/${candidature.user._id}/${id}`
-      )
-      setNotes(prev => ({ ...prev, [candidature._id]: res.data }))
-
-      // Vider le champ
-      setNoteData(prev => ({ ...prev, [candidature._id]: '' }))
-
-    } catch (err) {
-      setError('Erreur lors de l\'ajout de la note.')
-    } finally {
-      setSavingNote(null)
     }
   }
 
@@ -185,13 +134,15 @@ function Candidatures() {
       {/* ── Chargement ── */}
       {loading && (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent
+                          rounded-full animate-spin" />
         </div>
       )}
 
       {/* ── Erreur ── */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-6">
+        <div className="bg-red-50 border border-red-200 text-red-700
+                        px-4 py-3 rounded-lg text-sm mb-6">
           {error}
         </div>
       )}
@@ -243,7 +194,9 @@ function Candidatures() {
                     {/* Infos candidat */}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 text-sm">
-                        {candidature.user?.civility} {candidature.user?.firstname} {candidature.user?.lastname}
+                        {candidature.user?.civility}{' '}
+                        {candidature.user?.firstname}{' '}
+                        {candidature.user?.lastname}
                       </p>
                       <p className="text-xs text-gray-400 truncate">
                         {candidature.user?.email}
@@ -277,8 +230,9 @@ function Candidatures() {
 
                     {/* Bouton expand */}
                     <button
-                      onClick={() => toggleExpand(candidature._id, candidature.user?._id)}
-                      className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 transition"
+                      onClick={() => toggleExpand(candidature._id)}
+                      className="p-1.5 rounded-lg text-gray-400
+                                 hover:bg-gray-100 transition"
                     >
                       {expandedId === candidature._id
                         ? <ChevronUp size={16} />
@@ -290,18 +244,20 @@ function Candidatures() {
 
                   {/* ── Section expandable ── */}
                   {expandedId === candidature._id && (
-                    <div className="border-t border-border px-5 py-4 bg-gray-50 space-y-5">
+                    <div className="border-t border-border px-5 py-4
+                                    bg-gray-50 space-y-5">
 
                       {/* ── CV complet ── */}
                       {candidature.cv && (
                         <div>
-                          <p className="text-xs font-medium text-gray-500 uppercase
-                                        tracking-wide mb-3">
+                          <p className="text-xs font-medium text-gray-500
+                                        uppercase tracking-wide mb-3">
                             CV du candidat
                           </p>
 
                           {/* Infos personnelles */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
+
                             {candidature.cv.mobile && (
                               <CVItem label="Mobile" value={candidature.cv.mobile} />
                             )}
@@ -344,12 +300,15 @@ function Candidatures() {
                                 value={gouvernorats[candidature.cv.addressProvinceId]}
                               />
                             )}
+
                           </div>
 
                           {/* Compétences */}
                           {candidature.cv.skills?.length > 0 && (
                             <div className="mb-3">
-                              <p className="text-xs text-gray-400 mb-1.5">Compétences</p>
+                              <p className="text-xs text-gray-400 mb-1.5">
+                                Compétences
+                              </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.skills.map((skill, i) => (
                                   <span key={i}
@@ -365,7 +324,9 @@ function Candidatures() {
                           {/* Domaines d'expertise */}
                           {candidature.cv.areaOfExpertise?.length > 0 && (
                             <div className="mb-3">
-                              <p className="text-xs text-gray-400 mb-1.5">Domaines d'expertise</p>
+                              <p className="text-xs text-gray-400 mb-1.5">
+                                Domaines d'expertise
+                              </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.areaOfExpertise.map((area, i) => (
                                   <span key={i}
@@ -381,7 +342,9 @@ function Candidatures() {
                           {/* Postes souhaités */}
                           {candidature.cv.preferredPositions?.length > 0 && (
                             <div>
-                              <p className="text-xs text-gray-400 mb-1.5">Postes souhaités</p>
+                              <p className="text-xs text-gray-400 mb-1.5">
+                                Postes souhaités
+                              </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.preferredPositions.map((pos, i) => (
                                   <span key={i}
@@ -398,10 +361,11 @@ function Candidatures() {
                       )}
 
                       {/* ── Réponses formulaire ── */}
-                      {candidature.data && Object.keys(candidature.data).length > 0 && (
+                      {candidature.data &&
+                       Object.keys(candidature.data).length > 0 && (
                         <div>
-                          <p className="text-xs font-medium text-gray-500 uppercase
-                                        tracking-wide mb-2">
+                          <p className="text-xs font-medium text-gray-500
+                                        uppercase tracking-wide mb-2">
                             Réponses au formulaire
                           </p>
                           <div className="space-y-1">
@@ -415,36 +379,8 @@ function Candidatures() {
                         </div>
                       )}
 
-                      {/* ── Notes ── */}
-                      <div>
-                        <p className="text-xs font-medium text-gray-500 uppercase
-                                      tracking-wide mb-2">
-                          Notes ({notes[candidature._id]?.length || 0})
-                        </p>
-
-                        {notes[candidature._id]?.length > 0 ? (
-                          <div className="space-y-2 mb-3">
-                            {notes[candidature._id].map((note) => (
-                              <div key={note._id}
-                                   className="bg-white border border-border rounded-lg px-3 py-2">
-                                <p className="text-sm text-gray-700">{note.description}</p>
-                                <p className="text-xs text-gray-400 font-mono mt-1">
-                                  {note.createdBy?.firstname} {note.createdBy?.lastname}
-                                  {' · '}
-                                  {formatDate(note.createdAt)}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-xs text-gray-400 mb-3">Aucune note.</p>
-                        )}
-                      </div>
-
                       {/* ── Actions ── */}
                       <div className="flex items-center gap-3 pt-2 border-t border-border">
-
-                        {/* Planifier entretien */}
                         <Link
                           to={`/recruteur/entretiens/planifier?userId=${candidature.user?._id}&jobId=${id}`}
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-primary
@@ -454,33 +390,6 @@ function Candidatures() {
                           <Calendar size={13} />
                           Planifier entretien
                         </Link>
-
-                        {/* Ajouter une note */}
-                        <div className="flex-1 flex gap-2">
-                          <input
-                            type="text"
-                            placeholder="Ajouter une note..."
-                            value={noteData[candidature._id] || ''}
-                            onChange={(e) => setNoteData(prev => ({
-                              ...prev,
-                              [candidature._id]: e.target.value
-                            }))}
-                            onKeyDown={(e) => e.key === 'Enter' && handleAddNote(candidature)}
-                            className="flex-1 px-3 py-1.5 rounded-lg border border-border
-                                       text-xs focus:outline-none focus:ring-2
-                                       focus:ring-primary/30 focus:border-primary transition"
-                          />
-                          <button
-                            onClick={() => handleAddNote(candidature)}
-                            disabled={savingNote === candidature._id}
-                            className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg
-                                       text-xs font-medium hover:bg-gray-200 transition
-                                       disabled:opacity-50"
-                          >
-                            {savingNote === candidature._id ? '...' : 'Ajouter'}
-                          </button>
-                        </div>
-
                       </div>
 
                     </div>
@@ -500,7 +409,7 @@ function Candidatures() {
 
 
 // ─────────────────────────────────────────────
-// COMPOSANTS UTILITAIRES
+// COMPOSANT UTILITAIRE
 // ─────────────────────────────────────────────
 function CVItem({ label, value }) {
   return (
