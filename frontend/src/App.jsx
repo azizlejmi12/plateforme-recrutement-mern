@@ -15,14 +15,12 @@ import MonCV           from './pages/candidat/MonCV'
 import MesInvitations  from './pages/candidat/MesInvitations'
 
 // Pages recruteur
-import Dashboard from './pages/recruteur/Dashboard'
-import MesOffres from './pages/recruteur/MesOffres'
-import CreateOffre from './pages/recruteur/CreateOffre'
+import Dashboard            from './pages/recruteur/Dashboard'
+import MesOffres            from './pages/recruteur/MesOffres'
+import CreateOffre          from './pages/recruteur/CreateOffre'
 import OffreDetailRecruteur from './pages/recruteur/OffreDetail'
-import Candidatures from './pages/recruteur/Candidatures'
-
-
-
+import Candidatures         from './pages/recruteur/Candidatures'
+import Entretiens           from './pages/recruteur/Entretiens'
 
 function App() {
   return (
@@ -41,23 +39,6 @@ function App() {
               <Offres />
             </ProtectedRoute>
           } />
-          {/* Ajouter AVANT /recruteur/offres/:id */}
-          <Route path="/recruteur/offres/creer" element={
-            <ProtectedRoute roles={['RECRUTEUR']}>
-              <CreateOffre />
-            </ProtectedRoute>
-          } />
-          {/* Ajouter APRÈS /recruteur/offres/creer */}
-            <Route path="/recruteur/offres/:id" element={
-              <ProtectedRoute roles={['RECRUTEUR']}>
-                <OffreDetailRecruteur />
-              </ProtectedRoute>
-            } />
-            <Route path="/recruteur/offres/:id/candidatures" element={
-              <ProtectedRoute roles={['RECRUTEUR']}>
-                <Candidatures />
-              </ProtectedRoute>
-            } />
           <Route path="/candidat/offres/:id" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <OffreDetail />
@@ -79,19 +60,37 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* ── Routes recruteur ── */}
-          {/* ⚠️ Les routes spécifiques AVANT le wildcard */}
+          {/* ── Routes recruteur — spécifiques AVANT wildcards ── */}
           <Route path="/recruteur/dashboard" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <Dashboard />
             </ProtectedRoute>
           } />
-          {/* Ajouter avant /recruteur/* */}
-            <Route path="/recruteur/offres" element={
-              <ProtectedRoute roles={['RECRUTEUR']}>
-                <MesOffres />
-              </ProtectedRoute>
-            } />
+          <Route path="/recruteur/offres" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <MesOffres />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/offres/creer" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <CreateOffre />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/offres/:id" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <OffreDetailRecruteur />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/offres/:id/candidatures" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <Candidatures />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/entretiens" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <Entretiens />
+            </ProtectedRoute>
+          } />
           <Route path="/recruteur/*" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <div>Pages recruteur — à venir</div>
