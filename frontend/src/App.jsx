@@ -21,6 +21,8 @@ import CreateOffre          from './pages/recruteur/CreateOffre'
 import OffreDetailRecruteur from './pages/recruteur/OffreDetail'
 import Candidatures         from './pages/recruteur/Candidatures'
 import Entretiens           from './pages/recruteur/Entretiens'
+import PlanifierEntretien from './pages/recruteur/PlanifierEntretien'
+
 
 function App() {
   return (
@@ -89,6 +91,11 @@ function App() {
           <Route path="/recruteur/entretiens" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <Entretiens />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/entretiens/planifier" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <PlanifierEntretien />
             </ProtectedRoute>
           } />
           <Route path="/recruteur/*" element={
