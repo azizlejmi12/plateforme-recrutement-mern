@@ -1,18 +1,34 @@
 const nodemailer = require('nodemailer')
 
-const transporter = nodemailer.createTransport({
-  host:   process.env.EMAIL_HOST,
-  port:   process.env.EMAIL_PORT,
-  secure: false,          // false = port 587 (TLS), true = port 465 (SSL)
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-})
+const hasValidSmtpConfig = () => {
+  return Boolean(
+    process.env.EMAIL_HOST &&
+    process.env.EMAIL_HOST !== 'smtp.example.com' &&
+    process.env.EMAIL_USER &&
+    process.env.EMAIL_PASS
+  )
+}
+
+const transporter = hasValidSmtpConfig()
+  ? nodemailer.createTransport({
+      host:   process.env.EMAIL_HOST,
+      port:   Number(process.env.EMAIL_PORT) || 587,
+      secure: Number(process.env.EMAIL_PORT) === 465,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    })
+  : null
 
 // Fonction pour envoyer l'email d'activation
 const sendActivationEmail = async (email, firstname, activationToken) => {
   const activationUrl = `${process.env.FRONTEND_URL}/activate/${activationToken}`
+
+  if (!transporter) {
+    console.log('[EMAIL] Config SMTP manquante ou invalide. Lien d\'activation:', activationUrl)
+    return false
+  }
 
   const mailOptions = {
     from:    `"Plateforme Recrutement" <${process.env.EMAIL_USER}>`,
@@ -46,9 +62,21 @@ const sendActivationEmail = async (email, firstname, activationToken) => {
     `
   }
 
-  await transporter.sendMail(mailOptions)
+  try {
+    await transporter.sendMail(mailOptions)
+    return true
+  } catch (err) {
+    console.error('[EMAIL] Erreur envoi activation:', err.message)
+    console.log('[EMAIL] Lien d\'activation de secours:', activationUrl)
+    return false
+  }
 }
 const sendInvitationEmail = async (email, firstname, jobTitle) => {
+  if (!transporter) {
+    console.log('[EMAIL] Config SMTP manquante ou invalide. Invitation non envoyée.')
+    return false
+  }
+
   const mailOptions = {
     from:    `"Plateforme Recrutement" <${process.env.EMAIL_USER}>`,
     to:      email,
@@ -75,6 +103,12 @@ const sendInvitationEmail = async (email, firstname, jobTitle) => {
     `
   }
 
-  await transporter.sendMail(mailOptions)
+  try {
+    await transporter.sendMail(mailOptions)
+    return true
+  } catch (err) {
+    console.error('[EMAIL] Erreur envoi invitation:', err.message)
+    return false
+  }
 }
 module.exports = { sendActivationEmail, sendInvitationEmail }

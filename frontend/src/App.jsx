@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home            from './pages/Home'
 import Login           from './pages/Login'
 import Register        from './pages/Register'
+import ActivateAccount from './pages/ActivateAccount'
 
 // Pages candidat
 import Offres          from './pages/candidat/Offres'
@@ -36,6 +37,7 @@ function App() {
           <Route path="/"         element={<Login />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/activate/:token" element={<ActivateAccount />} />
 
           {/* ── Routes candidat ── */}
           <Route path="/candidat/offres" element={
