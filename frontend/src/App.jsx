@@ -13,6 +13,8 @@ import OffreDetail     from './pages/candidat/OffreDetail'
 import MesCandidatures from './pages/candidat/MesCandidatures'
 import MonCV           from './pages/candidat/MonCV'
 import MesInvitations  from './pages/candidat/MesInvitations'
+import MesEntretiens from './pages/candidat/MesEntretiens'
+
 
 // Pages recruteur
 import Dashboard            from './pages/recruteur/Dashboard'
@@ -31,7 +33,7 @@ function App() {
         <Routes>
 
           {/* ── Routes publiques ── */}
-          <Route path="/"         element={<Home />} />
+          <Route path="/"         element={<Login />} />
           <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -49,6 +51,11 @@ function App() {
           <Route path="/candidat/candidatures" element={
             <ProtectedRoute roles={['CANDIDAT']}>
               <MesCandidatures />
+            </ProtectedRoute>
+          } />
+          <Route path="/candidat/entretiens" element={
+            <ProtectedRoute roles={['CANDIDAT']}>
+              <MesEntretiens />
             </ProtectedRoute>
           } />
           <Route path="/candidat/cv" element={

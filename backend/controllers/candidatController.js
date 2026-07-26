@@ -3,6 +3,7 @@ const CV         = require('../models/CV')
 const Job        = require('../models/Job')
 const Candidacy  = require('../models/Candidacy')
 const Invitation = require('../models/InvitationToApply')
+const Interview  = require('../models/Interview')
 
 // =============================================
 // PROFIL — GET
@@ -381,6 +382,32 @@ const repondreInvitation = async (req, res) => {
   }
 }
 
+const getMesEntretiens = async (req, res) => {
+  try {
+    const entretiens = await Interview.find({ user: req.user.id })
+      .populate('job', 'title')
+      .populate('createdBy', 'firstname lastname email')
+      .sort({ date: 1 })
+    res.status(200).json(entretiens)
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message })
+  }
+}
+
+const repondreEntretien = async (req, res) => {
+  try {
+    const { reponse } = req.body
+    const entretien = await Interview.findOne({ _id: req.params.id, user: req.user.id })
+    if (!entretien) return res.status(404).json({ message: 'Entretien non trouvé.' })
+    if (entretien.statusCandidate !== 0) return res.status(400).json({ message: 'Vous avez déjà répondu.' })
+    entretien.statusCandidate = reponse
+    await entretien.save()
+    res.status(200).json({ message: reponse === 1 ? 'Entretien accepté !' : 'Entretien refusé.', entretien })
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message })
+  }
+}
+
 module.exports = {
   getProfil,
   updateProfil,
@@ -394,5 +421,7 @@ module.exports = {
   removeFavori,
   getMesFavoris,
   getMesInvitations,
-  repondreInvitation
+  repondreInvitation,
+  getMesEntretiens,
+  repondreEntretien
 }

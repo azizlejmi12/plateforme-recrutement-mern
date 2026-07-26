@@ -24,10 +24,11 @@ import { Search, MapPin, Clock, Users, ChevronLeft, ChevronRight } from 'lucide-
 // ─────────────────────────────────────────────
 
 const navItems = [
-  { path: '/candidat/offres',         label: '🔍 Offres d\'emploi' },
-  { path: '/candidat/candidatures',   label: '📋 Mes candidatures' },
-  { path: '/candidat/invitations',    label: '✉️ Mes invitations'  },
-  { path: '/candidat/cv',             label: '👤 Mon CV'           },
+  { path: '/candidat/offres',       label: '🔍 Offres d\'emploi' },
+  { path: '/candidat/candidatures', label: '📋 Mes candidatures' },
+  { path: '/candidat/entretiens',   label: '📅 Mes entretiens'   },
+  { path: '/candidat/invitations',  label: '✉️ Mes invitations'  },
+  { path: '/candidat/cv',           label: '👤 Mon CV'           },
 ]
 
 

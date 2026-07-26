@@ -8,10 +8,11 @@ import Layout from '../../components/Layout'
 import { Calendar, CheckCircle, XCircle, Mail } from 'lucide-react'
 
 const navItems = [
-  { path: '/candidat/offres',         label: '🔍 Offres d\'emploi' },
-  { path: '/candidat/candidatures',   label: '📋 Mes candidatures' },
-  { path: '/candidat/invitations',    label: '✉️ Mes invitations'  },
-  { path: '/candidat/cv',             label: '👤 Mon CV'           },
+  { path: '/candidat/offres',       label: '🔍 Offres d\'emploi' },
+  { path: '/candidat/candidatures', label: '📋 Mes candidatures' },
+  { path: '/candidat/entretiens',   label: '📅 Mes entretiens'   },
+  { path: '/candidat/invitations',  label: '✉️ Mes invitations'  },
+  { path: '/candidat/cv',           label: '👤 Mon CV'           },
 ]
 
 function MesInvitations() {

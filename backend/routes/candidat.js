@@ -4,7 +4,8 @@ const {
   getProfil, updateProfil, createCV, updateCV, getCV,
   postuler, getMesCandidatures, getCandidature,
   addFavori, removeFavori, getMesFavoris,
-  getMesInvitations, repondreInvitation
+  getMesInvitations, repondreInvitation,
+  getMesEntretiens, repondreEntretien
 } = require('../controllers/candidatController')
 const authMiddleware = require('../middlewares/authMiddleware')
 const roleMiddleware = require('../middlewares/roleMiddleware')
@@ -27,5 +28,7 @@ router.post('/favoris/:jobId',       addFavori)
 router.delete('/favoris/:jobId',     removeFavori)
 router.get('/invitations',           getMesInvitations)
 router.put('/invitations/:id',       repondreInvitationValidator,  validate, repondreInvitation)
+router.get('/entretiens',            getMesEntretiens)
+router.put('/entretiens/:id',        repondreEntretien)
 
 module.exports = router

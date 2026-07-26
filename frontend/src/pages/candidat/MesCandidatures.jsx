@@ -10,10 +10,11 @@ import { Calendar, ChevronRight, FileText } from 'lucide-react'
 
 // Navigation sidebar candidat
 const navItems = [
-  { path: '/candidat/offres',         label: '🔍 Offres d\'emploi' },
-  { path: '/candidat/candidatures',   label: '📋 Mes candidatures' },
-  { path: '/candidat/invitations',    label: '✉️ Mes invitations'  },
-  { path: '/candidat/cv',             label: '👤 Mon CV'           },
+  { path: '/candidat/offres',       label: '🔍 Offres d\'emploi' },
+  { path: '/candidat/candidatures', label: '📋 Mes candidatures' },
+  { path: '/candidat/entretiens',   label: '📅 Mes entretiens'   },
+  { path: '/candidat/invitations',  label: '✉️ Mes invitations'  },
+  { path: '/candidat/cv',           label: '👤 Mon CV'           },
 ]
 
 function MesCandidatures() {
