@@ -5,13 +5,11 @@ import Layout from '../../components/Layout'
 import { navItems } from './Dashboard'
 import StatusBadge from '../../components/StatusBadge'
 import {
-  ArrowLeft, Star, StarOff,
-  FileText, Calendar, ChevronDown, ChevronUp
+  ArrowLeft, Star, StarOff, FileText,
+  Calendar, ChevronDown, ChevronUp,
+  CheckCircle, XCircle
 } from 'lucide-react'
 
-// ─────────────────────────────────────────────
-// DONNÉES
-// ─────────────────────────────────────────────
 const gouvernorats = {
   1: 'Ariana', 2: 'Béja', 3: 'Ben Arous', 4: 'Bizerte',
   5: 'Gabès', 6: 'Gafsa', 7: 'Jendouba', 8: 'Kairouan',
@@ -25,23 +23,17 @@ const civilStatusLabels = ['Célibataire', 'Marié(e)', 'Divorcé(e)', 'Veuf/Veu
 
 function Candidatures() {
 
-  // ─────────────────────────────────────────────
-  // STATES
-  // ─────────────────────────────────────────────
   const [offre, setOffre]               = useState(null)
   const [candidatures, setCandidatures] = useState([])
   const [loading, setLoading]           = useState(true)
   const [error, setError]               = useState('')
   const [expandedId, setExpandedId]     = useState(null)
   const [shortlisting, setShortlisting] = useState(null)
+  const [updatingStatus, setUpdatingStatus] = useState(null)
 
   const { id } = useParams()
   const navigate = useNavigate()
 
-
-  // ─────────────────────────────────────────────
-  // CHARGEMENT
-  // ─────────────────────────────────────────────
   useEffect(() => {
     fetchData()
   }, [id])
@@ -62,18 +54,10 @@ function Candidatures() {
     }
   }
 
-
-  // ─────────────────────────────────────────────
-  // TOGGLE EXPAND
-  // ─────────────────────────────────────────────
   const toggleExpand = (candidatureId) => {
     setExpandedId(prev => prev === candidatureId ? null : candidatureId)
   }
 
-
-  // ─────────────────────────────────────────────
-  // PRÉSÉLECTIONNER
-  // ─────────────────────────────────────────────
   const handleShortlist = async (candidatureId, currentValue) => {
     setShortlisting(candidatureId)
     try {
@@ -95,10 +79,44 @@ function Candidatures() {
     }
   }
 
+  const handleAccepter = async (candidature) => {
+    setUpdatingStatus(candidature._id)
+    try {
+      await api.put(
+        `/recruteur/candidatures/${candidature._id}/status`,
+        { status: 2 }
+      )
+      setCandidatures(prev =>
+        prev.map(c =>
+          c._id === candidature._id ? { ...c, status: 2 } : c
+        )
+      )
+    } catch (err) {
+      setError('Erreur lors de l\'acceptation.')
+    } finally {
+      setUpdatingStatus(null)
+    }
+  }
 
-  // ─────────────────────────────────────────────
-  // UTILITAIRES
-  // ─────────────────────────────────────────────
+  const handleRefuser = async (candidatureId) => {
+    setUpdatingStatus(candidatureId)
+    try {
+      await api.put(
+        `/recruteur/candidatures/${candidatureId}/status`,
+        { status: 3 }
+      )
+      setCandidatures(prev =>
+        prev.map(c =>
+          c._id === candidatureId ? { ...c, status: 3 } : c
+        )
+      )
+    } catch (err) {
+      setError('Erreur lors du refus.')
+    } finally {
+      setUpdatingStatus(null)
+    }
+  }
+
   const formatDate = (date) => {
     if (!date) return '—'
     return new Date(date).toLocaleDateString('fr-FR', {
@@ -106,10 +124,6 @@ function Candidatures() {
     })
   }
 
-
-  // ─────────────────────────────────────────────
-  // RENDU JSX
-  // ─────────────────────────────────────────────
   return (
     <Layout navItems={navItems}>
 
@@ -131,7 +145,6 @@ function Candidatures() {
         </div>
       </div>
 
-      {/* ── Chargement ── */}
       {loading && (
         <div className="flex items-center justify-center py-20">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent
@@ -139,7 +152,6 @@ function Candidatures() {
         </div>
       )}
 
-      {/* ── Erreur ── */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700
                         px-4 py-3 rounded-lg text-sm mb-6">
@@ -147,21 +159,16 @@ function Candidatures() {
         </div>
       )}
 
-      {/* ── Liste des candidatures ── */}
       {!loading && !error && (
         <>
           {candidatures.length === 0 ? (
-
             <div className="text-center py-20">
               <FileText size={40} className="text-gray-300 mx-auto mb-4" />
               <p className="text-gray-400 text-lg">Aucune candidature reçue.</p>
             </div>
-
           ) : (
-
             <div className="space-y-3">
 
-              {/* Compteur */}
               <div className="mb-4">
                 <p className="text-sm text-gray-500 font-mono">
                   {candidatures.length} candidature{candidatures.length > 1 ? 's' : ''}
@@ -174,16 +181,12 @@ function Candidatures() {
                 <div
                   key={candidature._id}
                   className={`bg-white border rounded-xl overflow-hidden transition
-                    ${candidature.shortlisted
-                      ? 'border-accent/40'
-                      : 'border-border'
-                    }`}
+                    ${candidature.shortlisted ? 'border-accent/40' : 'border-border'}`}
                 >
 
                   {/* ── Ligne principale ── */}
                   <div className="flex items-center gap-4 px-5 py-4">
 
-                    {/* Initiales */}
                     <div className="w-10 h-10 rounded-full bg-primary/10 text-primary
                                     flex items-center justify-center font-semibold
                                     text-sm flex-shrink-0">
@@ -191,7 +194,6 @@ function Candidatures() {
                       {candidature.user?.lastname?.[0]?.toUpperCase() || ''}
                     </div>
 
-                    {/* Infos candidat */}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-gray-900 text-sm">
                         {candidature.user?.civility}{' '}
@@ -203,15 +205,12 @@ function Candidatures() {
                       </p>
                     </div>
 
-                    {/* Date */}
                     <div className="text-xs text-gray-400 font-mono hidden md:block">
                       {formatDate(candidature.createdAt)}
                     </div>
 
-                    {/* Statut */}
                     <StatusBadge status={candidature.status} type="candidacy" />
 
-                    {/* Bouton présélectionner */}
                     <button
                       onClick={() => handleShortlist(candidature._id, candidature.shortlisted)}
                       disabled={shortlisting === candidature._id}
@@ -219,8 +218,7 @@ function Candidatures() {
                       className={`p-1.5 rounded-lg transition disabled:opacity-50
                         ${candidature.shortlisted
                           ? 'text-accent bg-accent/10 hover:bg-accent/20'
-                          : 'text-gray-400 hover:bg-gray-100'
-                        }`}
+                          : 'text-gray-400 hover:bg-gray-100'}`}
                     >
                       {candidature.shortlisted
                         ? <Star size={16} fill="currentColor" />
@@ -228,11 +226,9 @@ function Candidatures() {
                       }
                     </button>
 
-                    {/* Bouton expand */}
                     <button
                       onClick={() => toggleExpand(candidature._id)}
-                      className="p-1.5 rounded-lg text-gray-400
-                                 hover:bg-gray-100 transition"
+                      className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 transition"
                     >
                       {expandedId === candidature._id
                         ? <ChevronUp size={16} />
@@ -244,20 +240,16 @@ function Candidatures() {
 
                   {/* ── Section expandable ── */}
                   {expandedId === candidature._id && (
-                    <div className="border-t border-border px-5 py-4
-                                    bg-gray-50 space-y-5">
+                    <div className="border-t border-border px-5 py-4 bg-gray-50 space-y-5">
 
-                      {/* ── CV complet ── */}
+                      {/* CV complet */}
                       {candidature.cv && (
                         <div>
-                          <p className="text-xs font-medium text-gray-500
-                                        uppercase tracking-wide mb-3">
+                          <p className="text-xs font-medium text-gray-500 uppercase
+                                        tracking-wide mb-3">
                             CV du candidat
                           </p>
-
-                          {/* Infos personnelles */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
-
                             {candidature.cv.mobile && (
                               <CVItem label="Mobile" value={candidature.cv.mobile} />
                             )}
@@ -300,20 +292,16 @@ function Candidatures() {
                                 value={gouvernorats[candidature.cv.addressProvinceId]}
                               />
                             )}
-
                           </div>
 
-                          {/* Compétences */}
                           {candidature.cv.skills?.length > 0 && (
                             <div className="mb-3">
-                              <p className="text-xs text-gray-400 mb-1.5">
-                                Compétences
-                              </p>
+                              <p className="text-xs text-gray-400 mb-1.5">Compétences</p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.skills.map((skill, i) => (
-                                  <span key={i}
-                                        className="px-2 py-0.5 bg-primary/10 text-primary
-                                                   rounded-full text-xs font-medium">
+                                  <span key={i} className="px-2 py-0.5 bg-primary/10
+                                                            text-primary rounded-full
+                                                            text-xs font-medium">
                                     {skill}
                                   </span>
                                 ))}
@@ -321,7 +309,6 @@ function Candidatures() {
                             </div>
                           )}
 
-                          {/* Domaines d'expertise */}
                           {candidature.cv.areaOfExpertise?.length > 0 && (
                             <div className="mb-3">
                               <p className="text-xs text-gray-400 mb-1.5">
@@ -329,9 +316,9 @@ function Candidatures() {
                               </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.areaOfExpertise.map((area, i) => (
-                                  <span key={i}
-                                        className="px-2 py-0.5 bg-accent/10 text-accent
-                                                   rounded-full text-xs font-medium">
+                                  <span key={i} className="px-2 py-0.5 bg-accent/10
+                                                            text-accent rounded-full
+                                                            text-xs font-medium">
                                     {area}
                                   </span>
                                 ))}
@@ -339,7 +326,6 @@ function Candidatures() {
                             </div>
                           )}
 
-                          {/* Postes souhaités */}
                           {candidature.cv.preferredPositions?.length > 0 && (
                             <div>
                               <p className="text-xs text-gray-400 mb-1.5">
@@ -347,25 +333,24 @@ function Candidatures() {
                               </p>
                               <div className="flex flex-wrap gap-1.5">
                                 {candidature.cv.preferredPositions.map((pos, i) => (
-                                  <span key={i}
-                                        className="px-2 py-0.5 bg-success/10 text-success
-                                                   rounded-full text-xs font-medium">
+                                  <span key={i} className="px-2 py-0.5 bg-success/10
+                                                            text-success rounded-full
+                                                            text-xs font-medium">
                                     {pos}
                                   </span>
                                 ))}
                               </div>
                             </div>
                           )}
-
                         </div>
                       )}
 
-                      {/* ── Réponses formulaire ── */}
+                      {/* Réponses formulaire */}
                       {candidature.data &&
                        Object.keys(candidature.data).length > 0 && (
                         <div>
-                          <p className="text-xs font-medium text-gray-500
-                                        uppercase tracking-wide mb-2">
+                          <p className="text-xs font-medium text-gray-500 uppercase
+                                        tracking-wide mb-2">
                             Réponses au formulaire
                           </p>
                           <div className="space-y-1">
@@ -381,15 +366,65 @@ function Candidatures() {
 
                       {/* ── Actions ── */}
                       <div className="flex items-center gap-3 pt-2 border-t border-border">
-                        <Link
-                          to={`/recruteur/entretiens/planifier?userId=${candidature.user?._id}&jobId=${id}`}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-primary
-                                     text-white rounded-lg text-xs font-medium
-                                     hover:bg-primary/90 transition"
-                        >
-                          <Calendar size={13} />
-                          Planifier entretien
-                        </Link>
+
+                        {/* En attente → boutons Accepter / Refuser */}
+                        {candidature.status !== 2 && candidature.status !== 3 && (
+                          <>
+                            <button
+                              onClick={() => handleAccepter(candidature)}
+                              disabled={updatingStatus === candidature._id}
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-success
+                                         text-white rounded-lg text-xs font-medium
+                                         hover:bg-success/90 transition
+                                         disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <CheckCircle size={13} />
+                              {updatingStatus === candidature._id ? '...' : 'Accepter'}
+                            </button>
+
+                            <button
+                              onClick={() => handleRefuser(candidature._id)}
+                              disabled={updatingStatus === candidature._id}
+                              className="flex items-center gap-1.5 px-3 py-1.5
+                                         border border-red-200 text-red-500 rounded-lg
+                                         text-xs font-medium hover:bg-red-50 transition
+                                         disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <XCircle size={13} />
+                              {updatingStatus === candidature._id ? '...' : 'Refuser'}
+                            </button>
+                          </>
+                        )}
+
+                        {/* Acceptée → bouton Planifier entretien */}
+                        {candidature.status === 2 && (
+                          <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-1.5 text-xs
+                                             text-success font-medium">
+                              <CheckCircle size={13} />
+                              Candidature acceptée
+                            </span>
+                            <Link
+                              to={`/recruteur/entretiens/planifier?userId=${candidature.user?._id}&jobId=${id}`}
+                              className="flex items-center gap-1.5 px-3 py-1.5
+                                         bg-primary text-white rounded-lg text-xs
+                                         font-medium hover:bg-primary/90 transition"
+                            >
+                              <Calendar size={13} />
+                              Planifier un entretien
+                            </Link>
+                          </div>
+                        )}
+
+                        {/* Refusée */}
+                        {candidature.status === 3 && (
+                          <span className="flex items-center gap-1.5 text-xs
+                                           text-red-500 font-medium">
+                            <XCircle size={13} />
+                            Candidature refusée
+                          </span>
+                        )}
+
                       </div>
 
                     </div>
@@ -407,10 +442,6 @@ function Candidatures() {
   )
 }
 
-
-// ─────────────────────────────────────────────
-// COMPOSANT UTILITAIRE
-// ─────────────────────────────────────────────
 function CVItem({ label, value }) {
   return (
     <div>

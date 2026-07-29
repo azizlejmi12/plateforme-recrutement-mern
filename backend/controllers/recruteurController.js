@@ -590,6 +590,33 @@ const getDashboardStats = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message })
   }
 }
+// =============================================
+// CANDIDATURES — CHANGER STATUT
+// =============================================
+const updateStatusCandidature = async (req, res) => {
+  try {
+    const { status } = req.body
+
+    const candidature = await Candidacy.findById(req.params.id)
+      .populate('job')
+
+    if (!candidature) {
+      return res.status(404).json({ message: 'Candidature non trouvée.' })
+    }
+
+    if (candidature.job.manager.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Accès refusé.' })
+    }
+
+    candidature.status = status
+    await candidature.save()
+
+    res.status(200).json(candidature)
+
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message })
+  }
+}
 
 module.exports = {
   getDashboardStats,
@@ -602,6 +629,7 @@ module.exports = {
   deleteOffre,
   getCandidatures,
   shortlistCandidat,
+  updateStatusCandidature,
   inviterCandidat,
   planifierEntretien,
   getMesEntretiens,

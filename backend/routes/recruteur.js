@@ -2,7 +2,7 @@ const express = require('express')
 const router  = express.Router()
 const {
   getDashboardStats, getProfil, updateProfil, createOffre, getMesOffres, getOffre,
-  updateOffre, deleteOffre, getCandidatures, shortlistCandidat,
+  updateOffre, deleteOffre, getCandidatures, shortlistCandidat,updateStatusCandidature,
   inviterCandidat, planifierEntretien, getMesEntretiens,
   updateEntretien, addNoteCandidature, addNoteEntretien
 } = require('../controllers/recruteurController')
@@ -26,6 +26,7 @@ router.put('/entretiens/:id',                updateEntretien)
 
 // ── Candidatures ───────────────────────────────────
 router.put('/candidatures/:id/shortlist',    shortlistCandidat)
+router.put('/candidatures/:id/status',   updateStatusCandidature)
 
 // ── Invitations ────────────────────────────────────
 router.post('/invitations',                  inviterCandidat)
