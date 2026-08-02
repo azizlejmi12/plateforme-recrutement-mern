@@ -25,6 +25,8 @@ import OffreDetailRecruteur from './pages/recruteur/OffreDetail'
 import Candidatures         from './pages/recruteur/Candidatures'
 import Entretiens           from './pages/recruteur/Entretiens'
 import PlanifierEntretien from './pages/recruteur/PlanifierEntretien'
+import CVtheque from './pages/recruteur/CVtheque'
+
 
 
 function App() {
@@ -100,6 +102,11 @@ function App() {
           <Route path="/recruteur/entretiens" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <Entretiens />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/cvtheque" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <CVtheque />
             </ProtectedRoute>
           } />
           <Route path="/recruteur/entretiens/planifier" element={

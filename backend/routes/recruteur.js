@@ -4,7 +4,7 @@ const {
   getDashboardStats, getProfil, updateProfil, createOffre, getMesOffres, getOffre,
   updateOffre, deleteOffre, getCandidatures, shortlistCandidat,updateStatusCandidature,
   inviterCandidat, planifierEntretien, getMesEntretiens,
-  updateEntretien, addNoteCandidature, addNoteEntretien
+  updateEntretien, addNoteCandidature, addNoteEntretien,getCVtheque
 } = require('../controllers/recruteurController')
 const authMiddleware = require('../middlewares/authMiddleware')
 const roleMiddleware = require('../middlewares/roleMiddleware')
@@ -18,6 +18,7 @@ router.use(roleMiddleware('RECRUTEUR'))
 router.get('/dashboard',                     getDashboardStats)
 router.get('/profil',                        getProfil)
 router.put('/profil',                        updateProfil)
+router.get('/cvtheque', getCVtheque)
 
 // ── Entretiens ─────────────────────────────────────
 router.post('/entretiens',                   planifierEntretienValidator, validate, planifierEntretien)

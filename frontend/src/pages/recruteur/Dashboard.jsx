@@ -13,6 +13,7 @@ import {
 export const navItems = [
   { path: '/recruteur/dashboard',  label: '📊 Dashboard'      },
   { path: '/recruteur/offres',     label: '💼 Mes offres'     },
+  { path: '/recruteur/cvtheque',   label: '👥 CVthèque'       },  // ← ajouter
   { path: '/recruteur/entretiens', label: '📅 Mes entretiens' },
 ]
 

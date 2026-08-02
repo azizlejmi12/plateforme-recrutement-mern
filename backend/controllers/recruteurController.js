@@ -617,6 +617,51 @@ const updateStatusCandidature = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message })
   }
 }
+// =============================================
+// CVTHÈQUE — GET TOUS LES CVs
+// =============================================
+const getCVtheque = async (req, res) => {
+  try {
+    const { skills, gouvernorat, poste, page = 1, limit = 10 } = req.query
+
+    // Construire le filtre sur les CVs
+    const cvFilter = { status: 1 }
+
+    if (skills) {
+      // Chercher les CVs qui contiennent ce skill
+      cvFilter.skills = { $regex: skills, $options: 'i' }
+    }
+    if (gouvernorat) {
+      cvFilter.addressProvinceId = Number(gouvernorat)
+    }
+    if (poste) {
+      cvFilter.preferredPositions = { $regex: poste, $options: 'i' }
+    }
+
+    const skip = (page - 1) * limit
+
+    const [cvs, total] = await Promise.all([
+      CV.find(cvFilter)
+        .populate('user', 'firstname lastname email civility')
+        .skip(skip)
+        .limit(Number(limit))
+        .sort({ createdAt: -1 }),
+      CV.countDocuments(cvFilter)
+    ])
+
+    res.status(200).json({
+      cvs,
+      pagination: {
+        total,
+        page:       Number(page),
+        totalPages: Math.ceil(total / limit)
+      }
+    })
+
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message })
+  }
+}
 
 module.exports = {
   getDashboardStats,
@@ -635,5 +680,6 @@ module.exports = {
   getMesEntretiens,
   updateEntretien,
   addNoteCandidature,
-  addNoteEntretien
+  addNoteEntretien,
+  getCVtheque,
 }
