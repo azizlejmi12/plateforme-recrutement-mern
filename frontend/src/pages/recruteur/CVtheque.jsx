@@ -95,26 +95,29 @@ function CVtheque() {
   // ENVOYER UNE INVITATION
   // ─────────────────────────────────────────────
   const handleInviter = async (cv) => {
-    const jobId = selectedOffre[cv._id]
-    if (!jobId) {
-      alert('Veuillez sélectionner une offre.')
-      return
-    }
-
-    setInviting(cv._id)
-    try {
-      await api.post('/recruteur/invitations', {
-        userId: cv.user._id,
-        jobId
-      })
-      setInviteSuccess(prev => ({ ...prev, [cv._id]: true }))
-    } catch (err) {
-      const msg = err.response?.data?.message || 'Erreur lors de l\'invitation.'
-      alert(msg)
-    } finally {
-      setInviting(null)
-    }
+  const jobId = selectedOffre[cv._id]
+  if (!jobId) {
+    alert('Veuillez sélectionner une offre.')
+    return
   }
+
+  setInviting(cv._id)
+  try {
+    await api.post('/recruteur/invitations', {
+      userId: cv.user._id,
+      jobId
+    })
+
+    // ← Mettre à jour correctement le state
+    setInviteSuccess(prev => ({ ...prev, [cv._id]: true }))
+
+  } catch (err) {
+    const msg = err.response?.data?.message || 'Erreur lors de l\'invitation.'
+    setError(msg)  // ← utiliser setError au lieu de alert
+  } finally {
+    setInviting(null)  // ← toujours remettre à null
+  }
+}
 
 
   // ─────────────────────────────────────────────
