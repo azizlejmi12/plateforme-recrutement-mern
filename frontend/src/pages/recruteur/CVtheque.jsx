@@ -4,7 +4,9 @@ import Layout from '../../components/Layout'
 import { navItems } from './Dashboard'
 import { Search, MapPin, Code, Briefcase, Send } from 'lucide-react'
 
-// Gouvernorats tunisiens
+// ─────────────────────────────────────────────
+// DONNÉES
+// ─────────────────────────────────────────────
 const gouvernorats = {
   1: 'Ariana', 2: 'Béja', 3: 'Ben Arous', 4: 'Bizerte',
   5: 'Gabès', 6: 'Gafsa', 7: 'Jendouba', 8: 'Kairouan',
@@ -19,23 +21,24 @@ function CVtheque() {
   // ─────────────────────────────────────────────
   // STATES
   // ─────────────────────────────────────────────
-  const [cvs, setCvs]               = useState([])
-  const [offres, setOffres]         = useState([])
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState('')
-  const [page, setPage]             = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [expandedId, setExpandedId] = useState(null)
+  const [cvs, setCvs]                   = useState([])
+  const [offres, setOffres]             = useState([])
+  const [loading, setLoading]           = useState(true)
+  const [error, setError]               = useState('')
+  const [page, setPage]                 = useState(1)
+  const [totalPages, setTotalPages]     = useState(1)
+  const [expandedId, setExpandedId]     = useState(null)
 
   // Filtres
-  const [skills, setSkills]         = useState('')
-  const [gouvernorat, setGouvernorat] = useState('')
-  const [poste, setPoste]           = useState('')
+  const [skills, setSkills]             = useState('')
+  const [gouvernorat, setGouvernorat]   = useState('')
+  const [poste, setPoste]               = useState('')
 
   // Invitation
-  const [inviting, setInviting]           = useState(null)   // ID CV en cours
-  const [selectedOffre, setSelectedOffre] = useState({})     // { cvId: offreId }
-  const [inviteSuccess, setInviteSuccess] = useState({})     // { cvId: true/false }
+  const [inviting, setInviting]         = useState(null)
+  const [selectedOffre, setSelectedOffre] = useState({})
+  const [inviteSuccess, setInviteSuccess] = useState({})
+  const [inviteError, setInviteError]   = useState({})
 
 
   // ─────────────────────────────────────────────
@@ -51,6 +54,7 @@ function CVtheque() {
 
   const fetchCVs = async () => {
     setLoading(true)
+    setError('')
     try {
       const params = { page, limit: 8 }
       if (skills)      params.skills      = skills
@@ -76,7 +80,6 @@ function CVtheque() {
     }
   }
 
-  // Rechercher avec les filtres
   const handleSearch = () => {
     setPage(1)
     fetchCVs()
@@ -95,29 +98,37 @@ function CVtheque() {
   // ENVOYER UNE INVITATION
   // ─────────────────────────────────────────────
   const handleInviter = async (cv) => {
-  const jobId = selectedOffre[cv._id]
-  if (!jobId) {
-    alert('Veuillez sélectionner une offre.')
-    return
+    const jobId = selectedOffre[cv._id]
+
+    if (!jobId) {
+      setInviteError(prev => ({
+        ...prev,
+        [cv._id]: 'Veuillez sélectionner une offre.'
+      }))
+      return
+    }
+
+    // Réinitialiser les messages précédents
+    setInviteError(prev => ({ ...prev, [cv._id]: null }))
+    setInviting(cv._id)
+
+    try {
+      await api.post('/recruteur/invitations', {
+        userId: cv.user._id,
+        jobId
+      })
+
+      // ✅ Marquer comme succès
+      setInviteSuccess(prev => ({ ...prev, [cv._id]: true }))
+
+    } catch (err) {
+      // ❌ Afficher l'erreur sous le bouton
+      const msg = err.response?.data?.message || 'Erreur lors de l\'invitation.'
+      setInviteError(prev => ({ ...prev, [cv._id]: msg }))
+    } finally {
+      setInviting(null)
+    }
   }
-
-  setInviting(cv._id)
-  try {
-    await api.post('/recruteur/invitations', {
-      userId: cv.user._id,
-      jobId
-    })
-
-    // ← Mettre à jour correctement le state
-    setInviteSuccess(prev => ({ ...prev, [cv._id]: true }))
-
-  } catch (err) {
-    const msg = err.response?.data?.message || 'Erreur lors de l\'invitation.'
-    setError(msg)  // ← utiliser setError au lieu de alert
-  } finally {
-    setInviting(null)  // ← toujours remettre à null
-  }
-}
 
 
   // ─────────────────────────────────────────────
@@ -140,32 +151,28 @@ function CVtheque() {
       <div className="bg-white border border-border rounded-xl p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
 
-          {/* Filtre compétences */}
           <div className="relative">
-            <Code size={15} className="absolute left-3 top-1/2 -translate-y-1/2
-                                       text-gray-400" />
+            <Code size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Compétence (ex: React)"
               value={skills}
               onChange={(e) => setSkills(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border
-                         text-sm focus:outline-none focus:ring-2 focus:ring-primary/30
+              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm
+                         focus:outline-none focus:ring-2 focus:ring-primary/30
                          focus:border-primary transition"
             />
           </div>
 
-          {/* Filtre gouvernorat */}
           <div className="relative">
-            <MapPin size={15} className="absolute left-3 top-1/2 -translate-y-1/2
-                                          text-gray-400" />
+            <MapPin size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <select
               value={gouvernorat}
               onChange={(e) => setGouvernorat(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border
-                         text-sm text-gray-600 focus:outline-none
-                         focus:ring-2 focus:ring-primary/30 focus:border-primary transition"
+              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm
+                         text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary/30
+                         focus:border-primary transition"
             >
               <option value="">Tous les gouvernorats</option>
               {Object.entries(gouvernorats).map(([id, nom]) => (
@@ -174,25 +181,22 @@ function CVtheque() {
             </select>
           </div>
 
-          {/* Filtre poste souhaité */}
           <div className="relative">
-            <Briefcase size={15} className="absolute left-3 top-1/2 -translate-y-1/2
-                                             text-gray-400" />
+            <Briefcase size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Poste souhaité (ex: Dev React)"
               value={poste}
               onChange={(e) => setPoste(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border
-                         text-sm focus:outline-none focus:ring-2 focus:ring-primary/30
+              className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-border text-sm
+                         focus:outline-none focus:ring-2 focus:ring-primary/30
                          focus:border-primary transition"
             />
           </div>
 
         </div>
 
-        {/* Boutons recherche */}
         <div className="flex gap-2">
           <button
             onClick={handleSearch}
@@ -214,19 +218,19 @@ function CVtheque() {
         </div>
       </div>
 
+      {/* ── Erreur globale ── */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700
+                        px-4 py-3 rounded-lg text-sm mb-6">
+          {error}
+        </div>
+      )}
+
       {/* ── Chargement ── */}
       {loading && (
         <div className="flex items-center justify-center py-20">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent
                           rounded-full animate-spin" />
-        </div>
-      )}
-
-      {/* ── Erreur ── */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700
-                        px-4 py-3 rounded-lg text-sm mb-6">
-          {error}
         </div>
       )}
 
@@ -237,7 +241,7 @@ function CVtheque() {
             <div className="text-center py-20">
               <p className="text-gray-400 text-lg">Aucun profil trouvé.</p>
               <p className="text-gray-400 text-sm mt-1">
-                Essayez de modifier vos filtres de recherche.
+                Essayez de modifier vos filtres.
               </p>
             </div>
           ) : (
@@ -261,7 +265,6 @@ function CVtheque() {
                       prev => prev === cv._id ? null : cv._id
                     )}
                   >
-
                     {/* Initiales */}
                     <div className="w-10 h-10 rounded-full bg-primary/10 text-primary
                                     flex items-center justify-center font-semibold
@@ -288,7 +291,7 @@ function CVtheque() {
                       </div>
                     )}
 
-                    {/* Compétences preview */}
+                    {/* Skills preview */}
                     {cv.skills?.length > 0 && (
                       <div className="hidden md:flex gap-1.5">
                         {cv.skills.slice(0, 3).map((skill, i) => (
@@ -310,24 +313,17 @@ function CVtheque() {
                     <span className="text-gray-400 text-xs">
                       {expandedId === cv._id ? '▲' : '▼'}
                     </span>
-
                   </div>
 
                   {/* ── Détail expandable ── */}
                   {expandedId === cv._id && (
                     <div className="border-t border-border px-5 py-4 bg-gray-50 space-y-4">
 
-                      {/* Infos CV */}
+                      {/* Infos personnelles */}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {cv.mobile && (
-                          <CVItem label="Mobile" value={cv.mobile} />
-                        )}
-                        {cv.linkedin && (
-                          <CVItem label="LinkedIn" value={cv.linkedin} />
-                        )}
-                        {cv.github && (
-                          <CVItem label="GitHub" value={cv.github} />
-                        )}
+                        {cv.mobile && <CVItem label="Mobile" value={cv.mobile} />}
+                        {cv.linkedin && <CVItem label="LinkedIn" value={cv.linkedin} />}
+                        {cv.github && <CVItem label="GitHub" value={cv.github} />}
                         {cv.dateOfBirth && (
                           <CVItem
                             label="Date de naissance"
@@ -369,9 +365,7 @@ function CVtheque() {
                       {/* Domaines */}
                       {cv.areaOfExpertise?.length > 0 && (
                         <div>
-                          <p className="text-xs text-gray-400 mb-1.5">
-                            Domaines d'expertise
-                          </p>
+                          <p className="text-xs text-gray-400 mb-1.5">Domaines d'expertise</p>
                           <div className="flex flex-wrap gap-1.5">
                             {cv.areaOfExpertise.map((area, i) => (
                               <span key={i}
@@ -400,43 +394,68 @@ function CVtheque() {
                         </div>
                       )}
 
-                      {/* ── Inviter ── */}
+                      {/* ── Section Invitation ── */}
                       <div className="pt-3 border-t border-border">
+
+                        {/* Succès */}
                         {inviteSuccess[cv._id] ? (
-                          <p className="text-sm text-success font-medium flex
-                                        items-center gap-1.5">
-                            ✅ Invitation envoyée avec succès !
-                          </p>
+                          <div className="flex items-center gap-2 px-3 py-2 bg-success/10
+                                          border border-success/20 rounded-lg">
+                            <span className="text-success text-lg">✅</span>
+                            <p className="text-sm text-success font-medium">
+                              Invitation envoyée avec succès !
+                            </p>
+                          </div>
                         ) : (
-                          <div className="flex items-center gap-3">
-                            <select
-                              value={selectedOffre[cv._id] || ''}
-                              onChange={(e) => setSelectedOffre(prev => ({
-                                ...prev,
-                                [cv._id]: e.target.value
-                              }))}
-                              className="flex-1 px-3 py-2 rounded-lg border border-border
-                                         text-sm focus:outline-none focus:ring-2
-                                         focus:ring-primary/30 focus:border-primary transition"
-                            >
-                              <option value="">Sélectionner une offre...</option>
-                              {offres.map((offre) => (
-                                <option key={offre._id} value={offre._id}>
-                                  {offre.title}
-                                </option>
-                              ))}
-                            </select>
-                            <button
-                              onClick={() => handleInviter(cv)}
-                              disabled={inviting === cv._id || !selectedOffre[cv._id]}
-                              className="flex items-center gap-1.5 px-4 py-2 bg-accent
-                                         text-white rounded-lg text-sm font-medium
-                                         hover:bg-accent/90 transition
-                                         disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              <Send size={14} />
-                              {inviting === cv._id ? 'Envoi...' : 'Inviter'}
-                            </button>
+                          <div className="space-y-2">
+
+                            {/* Erreur invitation */}
+                            {inviteError[cv._id] && (
+                              <p className="text-xs text-red-500 font-medium">
+                                ⚠️ {inviteError[cv._id]}
+                              </p>
+                            )}
+
+                            {/* Sélection offre + bouton */}
+                            <div className="flex items-center gap-3">
+                              <select
+                                value={selectedOffre[cv._id] || ''}
+                                onChange={(e) => {
+                                  setSelectedOffre(prev => ({
+                                    ...prev,
+                                    [cv._id]: e.target.value
+                                  }))
+                                  // Effacer l'erreur quand on sélectionne
+                                  setInviteError(prev => ({
+                                    ...prev,
+                                    [cv._id]: null
+                                  }))
+                                }}
+                                className="flex-1 px-3 py-2 rounded-lg border border-border
+                                           text-sm focus:outline-none focus:ring-2
+                                           focus:ring-primary/30 focus:border-primary transition"
+                              >
+                                <option value="">Sélectionner une offre...</option>
+                                {offres.map((offre) => (
+                                  <option key={offre._id} value={offre._id}>
+                                    {offre.title}
+                                  </option>
+                                ))}
+                              </select>
+
+                              <button
+                                onClick={() => handleInviter(cv)}
+                                disabled={inviting === cv._id}
+                                className="flex items-center gap-1.5 px-4 py-2 bg-accent
+                                           text-white rounded-lg text-sm font-medium
+                                           hover:bg-accent/90 transition
+                                           disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <Send size={14} />
+                                {inviting === cv._id ? 'Envoi...' : 'Inviter'}
+                              </button>
+                            </div>
+
                           </div>
                         )}
                       </div>
@@ -481,6 +500,9 @@ function CVtheque() {
   )
 }
 
+// ─────────────────────────────────────────────
+// COMPOSANT UTILITAIRE
+// ─────────────────────────────────────────────
 function CVItem({ label, value }) {
   return (
     <div>
