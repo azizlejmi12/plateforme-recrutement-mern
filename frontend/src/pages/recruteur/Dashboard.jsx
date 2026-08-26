@@ -54,7 +54,7 @@ function Dashboard() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="mb-8">
+      <div className="mb-8 border-l-4 border-accent pl-5">
         <h1 className="font-display text-3xl text-gray-900 font-semibold">
           Dashboard
         </h1>
@@ -163,7 +163,7 @@ function Dashboard() {
           </div>
 
           {/* ══ DERNIÈRES OFFRES ══ */}
-          <div className="bg-white border border-border rounded-xl overflow-hidden">
+          <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-200">
 
             <div className="flex items-center justify-between px-6 py-4 border-b border-border">
               <h2 className="font-semibold text-gray-900">Mes dernières offres</h2>
@@ -230,7 +230,7 @@ function Dashboard() {
 // ─────────────────────────────────────────────
 function StatCard({ icon, label, value, color }) {
   return (
-    <div className="bg-white border border-border rounded-xl p-5">
+    <div className="bg-white border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-gray-500">{label}</span>
         <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${color}`}>
