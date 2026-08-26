@@ -100,7 +100,7 @@ function MesOffres() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 border-l-4 border-accent pl-5">
         <div>
           <h1 className="font-display text-3xl text-gray-900 font-semibold">
             Mes offres
@@ -172,7 +172,7 @@ function MesOffres() {
         <>
           {offresFiltrees.length === 0 ? (
 
-            <div className="text-center py-20">
+            <div className="text-center py-20 bg-white border border-border rounded-2xl shadow-sm">
               <p className="text-gray-400 text-lg">Aucune offre trouvée.</p>
               <Link
                 to="/recruteur/offres/creer"
@@ -184,7 +184,7 @@ function MesOffres() {
 
           ) : (
 
-            <div className="bg-white border border-border rounded-xl overflow-hidden">
+            <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-200">
 
               {/* En-tête tableau */}
               <div className="grid grid-cols-5 px-6 py-3 bg-gray-50 border-b border-border
