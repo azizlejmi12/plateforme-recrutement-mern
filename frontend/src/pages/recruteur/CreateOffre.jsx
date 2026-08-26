@@ -152,7 +152,7 @@ function CreateOffre() {
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {/* ══ INFORMATIONS GÉNÉRALES ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">
             Informations générales
           </h2>
@@ -275,7 +275,7 @@ function CreateOffre() {
         </div>
 
         {/* ══ SALAIRE ET DURÉE ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">
             Salaire et durée
           </h2>
@@ -345,7 +345,7 @@ function CreateOffre() {
         </div>
 
         {/* ══ DATES ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">
             Dates
           </h2>
@@ -400,7 +400,7 @@ function CreateOffre() {
         </div>
 
         {/* ══ OPTIONS ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">
             Options
           </h2>
@@ -446,7 +446,7 @@ function CreateOffre() {
         </div>
 
         {/* ══ STATUT INITIAL ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">
             Statut de publication
           </h2>
