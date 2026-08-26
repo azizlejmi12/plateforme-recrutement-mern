@@ -173,7 +173,7 @@ function Entretiens() {
               {entretiens.map((entretien) => (
                 <div
                   key={entretien._id}
-                  className="bg-white border border-border rounded-xl overflow-hidden"
+                  className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
                 >
 
                   {/* ── Ligne principale ── */}
