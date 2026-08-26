@@ -244,7 +244,7 @@ function OffreDetail() {
 
       {/* ══ MODE APERÇU ══ */}
       {!isEditing && offre && (
-        <div className="bg-white border border-border rounded-xl divide-y divide-border">
+        <div className="bg-white border border-border rounded-2xl divide-y divide-border shadow-sm transition-all duration-200">
 
           <div className="px-6 py-5">
             <h2 className="font-semibold text-gray-900 mb-4">Informations générales</h2>
@@ -295,7 +295,7 @@ function OffreDetail() {
       {isEditing && (
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          <div className="bg-white border border-border rounded-xl p-6">
+          <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
             <h2 className="font-semibold text-gray-900 mb-5">Informations générales</h2>
             <div className="space-y-4">
 
@@ -360,7 +360,7 @@ function OffreDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-border rounded-xl p-6">
+          <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
             <h2 className="font-semibold text-gray-900 mb-5">Salaire et durée</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -410,7 +410,7 @@ function OffreDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-border rounded-xl p-6">
+          <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
             <h2 className="font-semibold text-gray-900 mb-5">Dates</h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -440,7 +440,7 @@ function OffreDetail() {
             </div>
           </div>
 
-          <div className="bg-white border border-border rounded-xl p-6">
+          <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
             <h2 className="font-semibold text-gray-900 mb-5">Statut</h2>
             <div className="flex gap-3">
               <button type="button"
