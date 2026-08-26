@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react'
-import api, { setAccessToken, getAccessToken } from '../services/api'
+import api, { setAccessToken } from '../services/api'
 
 // 1. Créer le Context — une "boîte" vide pour l'instant
 const AuthContext = createContext()
@@ -62,6 +62,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
   }
 
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser)
+  }
+
   // 3. La valeur partagée à toute l'application
   const value = {
     user,
@@ -69,6 +73,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!user   // !!user = convertit en booléen (true si user existe)
   }
 

@@ -26,7 +26,7 @@ app.use(cors({
   origin:      process.env.FRONTEND_URL,  // autorise uniquement React
   credentials: true                        // autorise les cookies
 }))
-app.use(express.json())
+app.use(express.json({ limit: '5mb' }))
 app.use(cookieParser())    // permet de lire req.cookies
 
 // Routes

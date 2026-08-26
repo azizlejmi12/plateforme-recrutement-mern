@@ -8,6 +8,7 @@ import Login           from './pages/Login'
 import Register        from './pages/Register'
 import ActivateAccount from './pages/ActivateAccount'
 import NotFound        from './pages/NotFound'
+import Profile         from './pages/Profile'
 
 // Pages candidat
 import Offres          from './pages/candidat/Offres'
@@ -78,6 +79,11 @@ function App() {
               <MesInvitations />
             </ProtectedRoute>
           } />
+          <Route path="/candidat/profil" element={
+            <ProtectedRoute roles={['CANDIDAT']}>
+              <Profile />
+            </ProtectedRoute>
+          } />
 
           {/* ── Routes recruteur — spécifiques AVANT wildcards ── */}
           <Route path="/recruteur/dashboard" element={
@@ -113,6 +119,11 @@ function App() {
           <Route path="/recruteur/cvtheque" element={
             <ProtectedRoute roles={['RECRUTEUR']}>
               <CVtheque />
+            </ProtectedRoute>
+          } />
+          <Route path="/recruteur/profil" element={
+            <ProtectedRoute roles={['RECRUTEUR']}>
+              <Profile />
             </ProtectedRoute>
           } />
           <Route path="/recruteur/entretiens/planifier" element={
