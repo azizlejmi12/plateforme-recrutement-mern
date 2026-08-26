@@ -23,9 +23,9 @@ function StatusBadge({ status, type = 'candidacy' }) {
   const config = configs[type]?.[status] || { label: 'Inconnu', color: '#6B7280' }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium bg-white border"
+    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wide font-mono font-medium bg-white/80 border shadow-sm transition-all duration-200"
           style={{ borderColor: config.color, color: config.color }}>
-      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: config.color }} />
+      <span className="w-1.5 h-1.5 rounded-full ring-2 ring-current/10" style={{ backgroundColor: config.color }} />
       {config.label}
     </span>
   )
