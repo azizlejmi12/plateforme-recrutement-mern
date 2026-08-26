@@ -170,7 +170,7 @@ function OffreDetail() {
       <div className="max-w-3xl">
 
         {/* ── En-tête de l'offre ── */}
-        <div className="bg-white border border-border rounded-xl p-6 mb-6">
+        <div className="bg-white border border-border rounded-2xl p-7 mb-6 shadow-sm transition-all duration-200">
 
           <div className="flex items-start justify-between mb-4">
             <div>
@@ -218,7 +218,7 @@ function OffreDetail() {
 
         {/* ── Formulaire personnalisé (si l'offre en a un) ── */}
         {formFields.length > 0 && (
-          <div className="bg-white border border-border rounded-xl p-6 mb-6">
+          <div className="bg-white border border-border rounded-2xl p-7 mb-6 shadow-sm transition-all duration-200">
             <h2 className="font-semibold text-gray-900 mb-4">
               Questions de l'employeur
             </h2>
