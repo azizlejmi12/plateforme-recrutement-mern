@@ -1,9 +1,11 @@
+import { ArrowRight, BriefcaseBusiness, Search, Users } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
 function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg">
-      <h1 className="font-display text-5xl text-primary font-semibold">
-        Tailwind fonctionne !
-      </h1>
+    <div className="min-h-screen bg-bg text-primary">
+      <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center"><Search size={20} /></div><span className="font-display text-2xl font-semibold">Recrutement</span></div><Link to="/login" className="text-sm font-medium text-accent hover:text-primary transition-colors">Se connecter</Link></header>
+      <main className="max-w-7xl mx-auto px-6 pt-16 pb-20 grid lg:grid-cols-[1.05fr_.95fr] gap-14 items-center"><section><p className="font-mono text-xs uppercase tracking-[0.2em] text-accent mb-5">La rencontre des potentiels</p><h1 className="font-display text-5xl sm:text-6xl leading-[1.05] font-semibold max-w-xl">Les bonnes carrières commencent ici.</h1><p className="mt-6 text-lg text-gray-500 max-w-lg leading-relaxed">Une plateforme claire pour révéler les talents et construire les équipes de demain.</p><div className="mt-8 flex flex-wrap gap-3"><Link to="/register" className="inline-flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-xl font-medium shadow-lg shadow-primary/15 hover:-translate-y-0.5 transition-all duration-200">Créer un compte <ArrowRight size={17} /></Link><Link to="/login" className="inline-flex items-center gap-2 border border-border bg-white px-5 py-3 rounded-xl font-medium hover:border-primary hover:text-primary transition-all duration-200">Accéder à mon espace</Link></div></section><section className="relative"><div className="absolute -inset-5 bg-accent/10 rounded-[2rem] rotate-2" /><div className="relative bg-primary rounded-[2rem] p-8 text-white shadow-2xl shadow-primary/20"><p className="font-mono text-xs uppercase tracking-[0.18em] text-white/50">Un espace pour chacun</p><div className="mt-10 space-y-5"><div className="flex items-center gap-4 border-b border-white/10 pb-5"><Users size={25} className="text-accent" /><div><p className="font-display text-2xl">Talents</p><p className="text-sm text-white/60">Trouvez une opportunité qui vous ressemble.</p></div></div><div className="flex items-center gap-4"><BriefcaseBusiness size={25} className="text-accent" /><div><p className="font-display text-2xl">Recruteurs</p><p className="text-sm text-white/60">Construisez votre prochaine équipe.</p></div></div></div></div></section></main>
     </div>
   )
 }
