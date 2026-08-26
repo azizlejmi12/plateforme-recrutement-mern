@@ -113,7 +113,7 @@ function Offres() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête de la page ── */}
-      <div className="mb-8">
+      <div className="mb-8 border-l-4 border-accent pl-5">
         <h1 className="font-display text-3xl text-gray-900 font-semibold">
           Offres d'emploi
         </h1>
@@ -123,7 +123,7 @@ function Offres() {
       </div>
 
       {/* ── Barre de recherche + filtres ── */}
-      <div className="bg-white border border-border rounded-xl p-4 mb-6 flex flex-wrap gap-3">
+      <div className="bg-white border border-border rounded-2xl p-5 mb-7 flex flex-wrap gap-3 shadow-sm transition-all duration-200">
 
         {/* Recherche par titre */}
         <div className="relative flex-1 min-w-48">
@@ -279,7 +279,7 @@ function OffreCard({ offre }) {
     // Link transforme toute la card en lien cliquable
     <Link
       to={`/candidat/offres/${offre._id}`}
-      className="block bg-white border border-border rounded-xl p-5
+      className="block bg-white border border-border rounded-xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200
                  hover:border-primary/40 hover:shadow-sm transition group"
     >
       {/* En-tête de la card */}
