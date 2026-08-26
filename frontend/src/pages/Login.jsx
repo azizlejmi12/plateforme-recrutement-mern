@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 // Eye / EyeOff : icônes pour afficher/cacher le mot de passe
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, LogIn, Search } from 'lucide-react'
 
 
 function Login() {
@@ -81,19 +81,17 @@ function Login() {
 
       {/* ── Panneau gauche — branding (caché sur mobile) ── */}
       {/* hidden = caché par défaut, lg:flex = visible sur grand écran */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col justify-between p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col justify-between p-14 relative overflow-hidden">
 
         {/* Logo en haut */}
-        <h1 className="font-display text-3xl text-white font-semibold">
-          Recrutement
-        </h1>
+        <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center"><Search size={20} /></div><h1 className="font-display text-3xl text-white font-semibold">Recrutement</h1></div>
 
         {/* Slogan au centre */}
         <div>
-          <p className="font-display text-4xl text-white leading-tight">
+          <p className="font-display text-5xl text-white leading-[1.05]">
             Trouvez le talent.<br />Trouvez l'opportunité.
           </p>
-          <p className="text-white/60 mt-4 font-sans">
+          <p className="text-white/60 mt-5 font-sans max-w-sm leading-relaxed">
             La plateforme qui connecte candidats et recruteurs en toute simplicité.
           </p>
         </div>
@@ -103,20 +101,20 @@ function Login() {
       </div>
 
       {/* ── Panneau droit — formulaire ── */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10">
+        <div className="w-full max-w-md bg-white border border-border rounded-2xl p-7 sm:p-9 shadow-xl shadow-primary/5">
 
           {/* Titre et sous-titre */}
-          <h2 className="font-display text-3xl text-gray-900 font-semibold mb-2">
+          <div className="flex items-center gap-3 mb-2"><div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><LogIn size={19} /></div><h2 className="font-display text-3xl text-gray-900 font-semibold">
             Connexion
-          </h2>
+          </h2></div>
           <p className="text-gray-500 mb-8">
             Accédez à votre espace.
           </p>
 
           {/* Message d'erreur — affiché uniquement si error n'est pas vide */}
           {error && (
-            <div className="mb-6 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+            <div className="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
               {error}
             </div>
           )}
@@ -178,8 +176,8 @@ function Login() {
             <button
               type="submit"
               disabled={loading}    // désactivé pendant l'appel API
-              className="w-full bg-primary text-white py-2.5 rounded-lg font-medium
-                         hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary text-white py-3 rounded-xl font-medium shadow-lg shadow-primary/15
+                         hover:bg-primary/90 hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {/* Texte dynamique selon l'état loading */}
               {loading ? 'Connexion...' : 'Se connecter'}
