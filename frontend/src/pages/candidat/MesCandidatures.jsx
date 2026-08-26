@@ -61,7 +61,7 @@ function MesCandidatures() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="mb-8">
+      <div className="mb-8 border-l-4 border-accent pl-5">
         <h1 className="font-display text-3xl text-gray-900 font-semibold">
           Mes candidatures
         </h1>
@@ -104,7 +104,7 @@ function MesCandidatures() {
           ) : (
 
             // Tableau des candidatures
-            <div className="bg-white border border-border rounded-xl overflow-hidden">
+            <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-200">
 
               {/* En-tête du tableau */}
               <div className="grid grid-cols-4 px-6 py-3 bg-gray-50 border-b border-border
