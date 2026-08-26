@@ -138,7 +138,7 @@ function CVtheque() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="mb-8">
+      <div className="mb-8 border-l-4 border-accent pl-5">
         <h1 className="font-display text-3xl text-gray-900 font-semibold">
           CVthèque
         </h1>
@@ -148,7 +148,7 @@ function CVtheque() {
       </div>
 
       {/* ── Filtres ── */}
-      <div className="bg-white border border-border rounded-xl p-4 mb-6">
+      <div className="bg-white border border-border rounded-2xl p-5 mb-7 shadow-sm transition-all duration-200">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
 
           <div className="relative">
@@ -254,7 +254,7 @@ function CVtheque() {
               {cvs.map((cv) => (
                 <div
                   key={cv._id}
-                  className="bg-white border border-border rounded-xl overflow-hidden"
+                  className="bg-white border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
                 >
 
                   {/* ── Ligne principale ── */}
