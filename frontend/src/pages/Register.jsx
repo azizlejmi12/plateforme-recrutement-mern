@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Search, UserPlus } from 'lucide-react'
 import PasswordStrength from '../components/PasswordStrength'
 import { isPasswordValid } from '../utils/passwordValidation'
 
@@ -70,7 +70,7 @@ function Register() {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg p-8">
-        <div className="max-w-sm text-center">
+        <div className="max-w-sm text-center bg-white border border-border rounded-2xl p-9 shadow-xl shadow-primary/5">
           <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-success text-2xl">✓</span>
           </div>
@@ -95,10 +95,8 @@ function Register() {
   return (
     <div className="min-h-screen flex bg-bg">
 
-      <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col justify-between p-12">
-        <h1 className="font-display text-3xl text-white font-semibold">
-          Recrutement
-        </h1>
+      <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col justify-between p-14">
+        <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-accent text-white flex items-center justify-center"><Search size={20} /></div><h1 className="font-display text-3xl text-white font-semibold">Recrutement</h1></div>
         <div>
           <p className="font-display text-4xl text-white leading-tight">
             Rejoignez la plateforme.
@@ -110,12 +108,12 @@ function Register() {
         <p className="text-white/40 text-sm font-mono">© 2026 Plateforme Recrutement</p>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 overflow-y-auto">
-        <div className="w-full max-w-sm py-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 overflow-y-auto">
+        <div className="w-full max-w-md bg-white border border-border rounded-2xl p-7 sm:p-9 shadow-xl shadow-primary/5 my-6">
 
-          <h2 className="font-display text-3xl text-gray-900 font-semibold mb-2">
+          <div className="flex items-center gap-3 mb-2"><div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><UserPlus size={19} /></div><h2 className="font-display text-3xl text-gray-900 font-semibold">
             Créer un compte
-          </h2>
+          </h2></div>
           <p className="text-gray-500 mb-8">
             Inscrivez-vous gratuitement.
           </p>
@@ -139,7 +137,7 @@ function Register() {
                     key={role}
                     type="button"
                     onClick={() => setFormData({ ...formData, role })}
-                    className={`py-2.5 rounded-lg text-sm font-medium border transition
+                    className={`py-3 rounded-xl text-sm font-medium border transition-all duration-200
                       ${formData.role === role
                         ? 'bg-primary text-white border-primary'
                         : 'bg-white text-gray-600 border-border hover:border-primary/40'
