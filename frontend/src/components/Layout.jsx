@@ -53,11 +53,23 @@ function Layout({ children, navItems }) {
               </Link>
             )
           })}
+          <div className="h-px bg-white/10 my-5" />
+          <Link
+            to={user?.role === 'RECRUTEUR' ? '/recruteur/profil' : '/candidat/profil'}
+            className={`relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200
+              ${location.pathname.endsWith('/profil')
+                ? 'bg-white/15 text-white shadow-sm before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-r-full before:bg-accent'
+                : 'text-white/65 hover:bg-white/10 hover:text-white hover:translate-x-0.5'
+              }`}
+          >
+            <UserCircle size={18} strokeWidth={location.pathname.endsWith('/profil') ? 2.4 : 1.8} />
+            <span>Mon profil</span>
+          </Link>
         </nav>
 
         {/* Profil + déconnexion en bas */}
         <div className="px-6 py-5 border-t border-white/10 bg-black/10">
-          <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-full bg-accent/90 text-white flex items-center justify-center font-display font-semibold">{`${user?.firstname?.[0] || ''}${user?.lastname?.[0] || ''}`.toUpperCase() || <UserCircle size={21} />}</div><div className="min-w-0"><p className="text-sm font-medium truncate">{user?.firstname} {user?.lastname}</p><p className="text-xs text-white/55 truncate">{user?.email}</p></div></div>
+          <Link to={user?.role === 'RECRUTEUR' ? '/recruteur/profil' : '/candidat/profil'} className="flex items-center gap-3 rounded-xl p-2 -mx-2 hover:bg-white/10 transition-all duration-200"><div className="w-10 h-10 rounded-full bg-accent/90 text-white flex items-center justify-center font-display font-semibold">{user?.image ? <img src={user.image} alt="Profil" className="w-full h-full rounded-full object-cover" /> : `${user?.firstname?.[0] || ''}${user?.lastname?.[0] || ''}`.toUpperCase() || <UserCircle size={21} />}</div><div className="min-w-0"><p className="text-sm font-medium truncate">{user?.firstname} {user?.lastname}</p><p className="text-xs text-white/55 truncate">{user?.email}</p></div></Link>
           <button
             onClick={logout}
             className="mt-4 flex items-center gap-2 text-xs uppercase tracking-wider text-white/60 hover:text-white transition-all duration-200"
