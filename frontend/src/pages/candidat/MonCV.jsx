@@ -209,7 +209,7 @@ function MonCV() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 border-l-4 border-accent pl-5">
         <div>
           <h1 className="font-display text-3xl text-gray-900 font-semibold">Mon CV</h1>
           <p className="text-gray-500 mt-1">
@@ -252,7 +252,7 @@ function MonCV() {
               MODE APERÇU
           ══════════════════════════════════════ */}
           {cv && !isEditing && (
-            <div className="bg-white border border-border rounded-xl divide-y divide-border">
+            <div className="bg-white border border-border rounded-2xl divide-y divide-border shadow-sm transition-all duration-200">
 
               {/* Informations personnelles */}
               <div className="px-6 py-5">
@@ -334,7 +334,7 @@ function MonCV() {
             <form onSubmit={handleSubmit} className="space-y-6">
 
               {/* ── Informations personnelles ── */}
-              <div className="bg-white border border-border rounded-xl p-6">
+              <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
                 <h2 className="font-semibold text-gray-900 mb-5">Informations personnelles</h2>
                 <div className="grid grid-cols-2 gap-4">
 
