@@ -8,9 +8,11 @@ function ProtectedRoute({ children, roles }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-gray-400 font-mono">Chargement...</p>
+        <div className="w-full max-w-sm px-6 space-y-4 animate-pulse">
+          <div className="h-3 w-24 bg-primary/10 rounded-full mx-auto" />
+          <div className="h-12 bg-white border border-border rounded-xl" />
+          <div className="h-24 bg-white border border-border rounded-xl" />
+          <p className="text-center text-xs text-gray-400 font-mono">Chargement...</p>
         </div>
       </div>
     )
