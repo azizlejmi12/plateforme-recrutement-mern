@@ -206,7 +206,7 @@ function PlanifierEntretien() {
       <form onSubmit={handleSubmit} className="max-w-lg space-y-6">
 
         {/* ══ OFFRE + CANDIDAT ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">Offre et candidat</h2>
 
           <div className="space-y-4">
@@ -290,7 +290,7 @@ function PlanifierEntretien() {
         </div>
 
         {/* ══ DATE ET HEURE ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">Date et heure</h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -330,7 +330,7 @@ function PlanifierEntretien() {
         </div>
 
         {/* ══ MODE ══ */}
-        <div className="bg-white border border-border rounded-xl p-6">
+        <div className="bg-white border border-border rounded-2xl p-7 shadow-sm transition-all duration-200">
           <h2 className="font-semibold text-gray-900 mb-5">Mode de l'entretien</h2>
 
           <div className="grid grid-cols-3 gap-3">
