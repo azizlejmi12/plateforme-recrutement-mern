@@ -128,10 +128,10 @@ function Candidatures() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-4 mb-8 border-l-4 border-accent pl-5">
         <button
           onClick={() => navigate('/recruteur/offres')}
-          className="p-2 rounded-lg border border-border hover:bg-gray-50 transition"
+          className="p-2.5 rounded-xl border border-border bg-white hover:bg-primary hover:text-white transition-all duration-200 shadow-sm"
         >
           <ArrowLeft size={18} />
         </button>
@@ -162,7 +162,7 @@ function Candidatures() {
       {!loading && !error && (
         <>
           {candidatures.length === 0 ? (
-            <div className="text-center py-20">
+            <div className="text-center py-20 bg-white border border-border rounded-2xl shadow-sm">
               <FileText size={40} className="text-gray-300 mx-auto mb-4" />
               <p className="text-gray-400 text-lg">Aucune candidature reçue.</p>
             </div>
@@ -180,7 +180,7 @@ function Candidatures() {
               {candidatures.map((candidature) => (
                 <div
                   key={candidature._id}
-                  className={`bg-white border rounded-xl overflow-hidden transition
+                  className={`bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200
                     ${candidature.shortlisted ? 'border-accent/40' : 'border-border'}`}
                 >
 
