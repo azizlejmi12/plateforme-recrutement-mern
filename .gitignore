@@ -26,6 +26,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Documentation locale
+projet_mern_recrutement.md
+
 # Uploads (fichiers utilisateurs - généralement pas versionnés)
 backend/uploads/*
 !backend/uploads/.gitkeep

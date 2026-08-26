@@ -7,6 +7,7 @@ import Home            from './pages/Home'
 import Login           from './pages/Login'
 import Register        from './pages/Register'
 import ActivateAccount from './pages/ActivateAccount'
+import NotFound        from './pages/NotFound'
 
 // Pages candidat
 import Offres          from './pages/candidat/Offres'
@@ -26,6 +27,11 @@ import Candidatures         from './pages/recruteur/Candidatures'
 import Entretiens           from './pages/recruteur/Entretiens'
 import PlanifierEntretien from './pages/recruteur/PlanifierEntretien'
 import CVtheque from './pages/recruteur/CVtheque'
+
+// Pages admin
+import AdminDashboard    from './pages/admin/Dashboard'
+import AdminUsers        from './pages/admin/Users'
+import AdminReferentiels from './pages/admin/Referentiels'
 
 
 
@@ -121,14 +127,29 @@ function App() {
           } />
 
           {/* ── Routes admin ── */}
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <AdminUsers />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/referentiels" element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <AdminReferentiels />
+            </ProtectedRoute>
+          } />
           <Route path="/admin/*" element={
             <ProtectedRoute roles={['ADMIN']}>
-              <div>Pages admin — à venir</div>
+              <Navigate to="/admin/dashboard" replace />
             </ProtectedRoute>
           } />
 
           {/* ── Route 404 ── */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
       </BrowserRouter>

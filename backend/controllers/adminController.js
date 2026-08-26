@@ -242,16 +242,20 @@ module.exports = {
   createSkill:      createReferentiel(Skill),
   getSkills:        getReferentiels(Skill),
   updateSkill:      updateReferentiel(Skill),
+  deleteSkill:     deleteReferentiel(Skill),
   // Référentiels — Languages
   createLanguage:   createReferentiel(Language),
   getLanguages:     getReferentiels(Language),
   updateLanguage:   updateReferentiel(Language),
+  deleteLanguage:   deleteReferentiel(Language),
   // Référentiels — Areas
   createArea:       createReferentiel(AreaOfExpertise),
   getAreas:         getReferentiels(AreaOfExpertise),
   updateArea:       updateReferentiel(AreaOfExpertise),
+  deleteArea:       deleteReferentiel(AreaOfExpertise),
   // Référentiels — Specialities
   createSpeciality: createReferentiel(Speciality),
   getSpecialities:  getReferentiels(Speciality),
-  updateSpeciality: updateReferentiel(Speciality)
+  updateSpeciality: updateReferentiel(Speciality),
+  deleteSpeciality: deleteReferentiel(Speciality)
 }
