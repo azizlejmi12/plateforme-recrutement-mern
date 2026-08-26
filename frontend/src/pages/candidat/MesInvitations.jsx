@@ -88,7 +88,7 @@ function MesInvitations() {
     <Layout navItems={navItems}>
 
       {/* ── En-tête ── */}
-      <div className="mb-8">
+      <div className="mb-8 border-l-4 border-accent pl-5">
         <h1 className="font-display text-3xl text-gray-900 font-semibold">
           Mes invitations
         </h1>
